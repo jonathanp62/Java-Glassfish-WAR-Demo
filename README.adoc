@@ -1,0 +1,7 @@
+Glassfish-WAR-Demo
+------------------
+
+A demonstration of a basic WAR application running Glassfish 8.
+
+Current version: 0.1.0.
+~~~~~~~~~~~~~~~~~~~~~~~

@@ -4,5 +4,6 @@
         "http://glassfish.org/dtds/glassfish-web-app_3_0-1.dtd">
 
 <glassfish-web-app>
+    <context-root>/glassfish-war-demo</context-root>
     <class-loader delegate="false"/>    <!-- Disable class loader delegation so that Logback logging is preferred for the WAR -->
 </glassfish-web-app>

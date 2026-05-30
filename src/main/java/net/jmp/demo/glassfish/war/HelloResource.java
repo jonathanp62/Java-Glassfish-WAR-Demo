@@ -41,8 +41,12 @@ import java.util.ResourceBundle;
 /// The hello resource class
 @Path("/hello")
 public class HelloResource {
+    /// The messages resource bundle
     private final ResourceBundle bundle;
 
+    /// The constructor
+    ///
+    /// @param  bundle  java.util.ResourceBundle
     @Inject
     public HelloResource(final ResourceBundle bundle) {
         super();
@@ -50,6 +54,9 @@ public class HelloResource {
         this.bundle = bundle;
     }
 
+    /// The GET method
+    ///
+    /// @return java.lang.String
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String sayHello() {

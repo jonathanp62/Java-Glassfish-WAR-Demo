@@ -9,8 +9,12 @@ import jakarta.faces.context.FacesContext; // If using JSF/Jakarta Faces
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/// The message bundle producer class
 @RequestScoped
 public class MessageBundleProducer {
+    /// The get bundle method
+    ///
+    /// @return java.util.ResourceBundle
     @Produces
     public ResourceBundle getBundle() {
         // Option A: If using Jakarta Faces (JSF), get the user's browser locale

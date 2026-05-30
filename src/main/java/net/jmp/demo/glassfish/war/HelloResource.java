@@ -38,9 +38,18 @@ import jakarta.ws.rs.core.MediaType;
 
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static net.jmp.util.logging.LoggerUtils.entry;
+import static net.jmp.util.logging.LoggerUtils.exitWith;
+
 /// The hello resource class
 @Path("/hello")
 public class HelloResource {
+    // Initialize the SLF4J Logger
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     /// The messages resource bundle
     private final ResourceBundle bundle;
 
@@ -60,6 +69,18 @@ public class HelloResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String sayHello() {
-        return this.bundle.getString("hello");
+        if (this.logger.isTraceEnabled()) {
+            this.logger.trace(entry());
+        }
+
+        this.logger.info("HelloResource: sayHello() called");
+
+        final String result = this.bundle.getString("hello");
+
+        if (this.logger.isTraceEnabled()) {
+            this.logger.trace(exitWith(result));
+        }
+
+        return result;
     }
 }

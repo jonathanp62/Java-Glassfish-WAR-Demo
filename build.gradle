@@ -40,6 +40,8 @@
 plugins {
 	id 'java'
 	id 'net.jmp.gradle.plugin.projectinfo-info'	version '0.3.0'
+	id 'net.ltgt.errorprone'					version '4.2.0'
+	id 'net.ltgt.nullaway'						version '2.3.0'
 	id 'war'
 }
 
@@ -65,7 +67,15 @@ repositories {
 }
 
 dependencies {
+	compileOnly 		(libs.org.jspecify.jspecify)
 	compileOnly 		(libs.jakarta.platform.jakarta.jakartaee.api)
+
+	errorprone			('com.uber.nullaway:nullaway:0.13.4')
+	errorprone 			('com.google.errorprone:error_prone_core:2.49.0')
+}
+
+nullaway {
+	annotatedPackages.add('net.jmp.demo.glassfish.war')
 }
 
 tasks.compileJava {

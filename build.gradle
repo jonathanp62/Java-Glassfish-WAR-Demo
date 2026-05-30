@@ -39,6 +39,7 @@
 
 plugins {
 	id 'java'
+	id 'net.jmp.gradle.plugin.projectinfo-info'	version '0.3.0'
 	id 'war'
 }
 
@@ -64,12 +65,18 @@ repositories {
 }
 
 dependencies {
-	compileOnly 		("jakarta.platform:jakarta.jakartaee-api:11.0.0-M2")
+	compileOnly 		("jakarta.platform:jakarta.jakartaee-api:11.0.0")
 }
 
 tasks.compileJava {
     options.forkOptions.jvmArgs = ["-Xmx8192m", "--enable-native-access=ALL-UNNAMED"]
     options.release.set(25)
+}
+
+tasks.register('deploy', Copy) {
+	dependsOn build			// Forces a fresh build before deploying
+	from war.archiveFile	// Path to your local built WAR file
+	into '/usr/local/glassfish8/glassfish/domains/domain1/autodeploy'
 }
 
 tasks.withType(Javadoc).configureEach {

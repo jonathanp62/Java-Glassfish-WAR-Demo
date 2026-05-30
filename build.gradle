@@ -65,7 +65,7 @@ repositories {
 }
 
 dependencies {
-	compileOnly 		("jakarta.platform:jakarta.jakartaee-api:11.0.0")
+	compileOnly 		(libs.jakarta.platform.jakarta.jakartaee.api)
 }
 
 tasks.compileJava {

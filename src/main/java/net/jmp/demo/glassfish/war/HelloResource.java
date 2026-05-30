@@ -28,18 +28,31 @@ package net.jmp.demo.glassfish.war;
  * SOFTWARE.
  */
 
+import jakarta.inject.Inject;
+
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 
 import jakarta.ws.rs.core.MediaType;
 
+import java.util.ResourceBundle;
+
 /// The hello resource class
 @Path("/hello")
 public class HelloResource {
+    private final ResourceBundle bundle;
+
+    @Inject
+    public HelloResource(final ResourceBundle bundle) {
+        super();
+
+        this.bundle = bundle;
+    }
+
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String sayHello() {
-        return "Hello from GlassFish 8 with Jakarta EE 11 and Gradle!";
+        return this.bundle.getString("hello");
     }
 }

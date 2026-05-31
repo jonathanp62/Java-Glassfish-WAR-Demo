@@ -37,7 +37,7 @@
         <title><fmt:message key="title" /></title>
     </head>
     <body>
-        <h2><fmt:message key="title" /></h2>
+        <h2><fmt:message key="title.jsp" /></h2>
         <p><fmt:message key="hello.jsp" /></p>
     </body>
 </html>

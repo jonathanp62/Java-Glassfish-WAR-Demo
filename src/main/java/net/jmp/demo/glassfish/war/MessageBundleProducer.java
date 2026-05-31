@@ -4,7 +4,7 @@ import jakarta.enterprise.context.RequestScoped;
 
 import jakarta.enterprise.inject.Produces;
 
-import jakarta.faces.context.FacesContext; // If using JSF/Jakarta Faces
+import jakarta.inject.Named;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -16,13 +16,8 @@ public class MessageBundleProducer {
     ///
     /// @return java.util.ResourceBundle
     @Produces
+    @Named("messages")
     public ResourceBundle getBundle() {
-        // Option A: If using Jakarta Faces (JSF), get the user's browser locale
-        // Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
-
-        // Option B: Fallback to system default or custom logic if not using JSF
-        final Locale locale = Locale.getDefault();
-
-        return ResourceBundle.getBundle("messages", locale);
+        return ResourceBundle.getBundle("messages", Locale.getDefault());
     }
 }

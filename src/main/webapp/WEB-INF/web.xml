@@ -1,5 +1,7 @@
-<%--
- (#)index.jsp   0.1.0   05/30/2026
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ (#)web.xml 0.1.0   05/31/2026
 
  @author   Jonathan Parker
  @version  0.1.0
@@ -26,18 +28,15 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
---%>
+-->
 
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title><fmt:message key="title" /></title>
-    </head>
-    <body>
-        <h2><fmt:message key="title" /></h2>
-        <p><fmt:message key="hello.jsp" /></p>
-    </body>
-</html>
+<web-app
+        xmlns="https://jakarta.ee/xml/ns/jakartaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd"
+        version="6.1">
+    <context-param>
+        <param-name>jakarta.servlet.jsp.jstl.fmt.localizationContext</param-name>
+        <param-value>messages</param-value>
+    </context-param>
+</web-app>

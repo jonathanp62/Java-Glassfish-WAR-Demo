@@ -67,8 +67,10 @@ repositories {
 }
 
 dependencies {
-	compileOnly 		(libs.org.jspecify.jspecify)
 	compileOnly 		(libs.jakarta.platform.jakarta.jakartaee.api)
+	compileOnly 		(libs.jakarta.servlet.jsp.jstl.jakarta.servlet.jsp.jstl.api)
+	compileOnly 		(libs.org.glassfish.web.jakarta.servlet.jsp.jstl)
+	compileOnly 		(libs.org.jspecify.jspecify)
 
 	implementation 		(libs.bundles.logging)
 

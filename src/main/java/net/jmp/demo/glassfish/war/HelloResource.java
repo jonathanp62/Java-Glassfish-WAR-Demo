@@ -29,6 +29,7 @@ package net.jmp.demo.glassfish.war;
  */
 
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -57,7 +58,7 @@ public class HelloResource {
     ///
     /// @param  bundle  java.util.ResourceBundle
     @Inject
-    public HelloResource(final ResourceBundle bundle) {
+    public HelloResource(@Named("messages") final ResourceBundle bundle) {
         super();
 
         this.bundle = bundle;
@@ -75,7 +76,7 @@ public class HelloResource {
 
         this.logger.info("HelloResource: sayHello() called");
 
-        final String result = this.bundle.getString("hello");
+        final String result = this.bundle.getString("hello.java");
 
         if (this.logger.isTraceEnabled()) {
             this.logger.trace(exitWith(result));

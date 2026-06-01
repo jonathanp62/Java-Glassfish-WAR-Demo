@@ -81,7 +81,28 @@ public class HelloResource {
         final Response response = Response.ok(result).build();
 
         if (this.logger.isTraceEnabled()) {
-            this.logger.trace(exitWith(result));
+            this.logger.trace(exitWith(response));
+        }
+
+        return response;
+    }
+
+    /// The GET method that returns a JSON response
+    ///
+    /// @return jakarta.ws.rs.core.Response
+    @GET
+    @Path("/json")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response jsonHello() {
+        if (this.logger.isTraceEnabled()) {
+            this.logger.trace(entry());
+        }
+
+        final StatusMessage statusMessage = new StatusMessage("OK", "The quick brown fox jumped over the lazy dog");
+        final Response response = Response.ok(statusMessage).build();
+
+        if (this.logger.isTraceEnabled()) {
+            this.logger.trace(exitWith(response));
         }
 
         return response;

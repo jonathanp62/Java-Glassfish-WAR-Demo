@@ -59,4 +59,16 @@ class TestHelloResource {
             assertEquals("Hello (test)", response.getEntity());
         }
     }
+
+    @Test
+    void testJsonHello() {
+        final ResourceBundle bundle = mock(ResourceBundle.class);
+        final HelloResource helloResource = new HelloResource(bundle);
+        final StatusMessage expected = new StatusMessage("OK", "The quick brown fox jumped over the lazy dog");
+
+        try (final Response response = helloResource.jsonHello()) {
+            assertEquals(200, response.getStatus());
+            assertEquals(expected, response.getEntity());
+        }
+    }
 }

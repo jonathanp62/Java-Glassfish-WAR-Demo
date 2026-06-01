@@ -28,6 +28,7 @@
  SOFTWARE.
 --%>
 
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -39,5 +40,7 @@
     <body>
         <h2><fmt:message key="title.jsp" /></h2>
         <p><fmt:message key="hello.jsp" /></p>
+        <p><a href="<c:url value='/api/hello' />"><fmt:message key="hello.resource.string" /></a></p>
+        <p><a href="<c:url value='/api/hello/json' />"><fmt:message key="hello.resource.json" /></a></p>
     </body>
 </html>

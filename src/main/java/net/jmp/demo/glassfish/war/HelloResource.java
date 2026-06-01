@@ -36,6 +36,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import java.util.ResourceBundle;
 
@@ -66,10 +67,10 @@ public class HelloResource {
 
     /// The GET method
     ///
-    /// @return java.lang.String
+    /// @return jakarta.ws.rs.core.Response
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String sayHello() {
+    public Response sayHello() {
         if (this.logger.isTraceEnabled()) {
             this.logger.trace(entry());
         }
@@ -77,11 +78,12 @@ public class HelloResource {
         this.logger.info("HelloResource: sayHello() called");
 
         final String result = this.bundle.getString("hello.java");
+        final Response response = Response.ok(result).build();
 
         if (this.logger.isTraceEnabled()) {
             this.logger.trace(exitWith(result));
         }
 
-        return result;
+        return response;
     }
 }

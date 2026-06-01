@@ -31,23 +31,44 @@
 ch-qos-logback-logback-classic = "1.5.32"
 jakarta-platform-jakarta-jakartaee-api = "11.0.0"
 jakarta-servlet-jsp-jstl-jakarta-servlet-jsp-jstl-api = "3.0.2"
+jakarta-ws-rs-jakarta-ws-rs-api = "4.0.0"
 net-jmp-util-logging-logging-utilities = "1.2.0"
+org-glassfish-jersey-core-jersey-common = "4.0.0"
 org-glassfish-web-jakarta-servlet-jsp-jstl = "3.0.1"
 org-jspecify-jspecify = "1.0.0"
+org-junit-jupiter-junit-jupiter = "6.1.0"
+org-mockito-mockito-core = "5.23.0"
+org-mockito-mockito-junit-jupiter = "5.23.0"
 org-slf4j-slf4j-api = "2.0.18"
 
 [libraries]
 ch-qos-logback-logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "ch-qos-logback-logback-classic" }
 jakarta-platform-jakarta-jakartaee-api = { module = "jakarta.platform:jakarta.jakartaee-api", version.ref = "jakarta-platform-jakarta-jakartaee-api" }
 jakarta-servlet-jsp-jstl-jakarta-servlet-jsp-jstl-api = { module = "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api", version.ref = "jakarta-servlet-jsp-jstl-jakarta-servlet-jsp-jstl-api" }
+jakarta-ws-rs-jakarta-ws-rs-api = { module = "jakarta.ws.rs:jakarta.ws.rs-api", version.ref = "jakarta-ws-rs-jakarta-ws-rs-api" }
 net-jmp-util-logging-logging-utilities = { module = "net.jmp.util.logging:logging-utilities", version.ref = "net-jmp-util-logging-logging-utilities" }
+org-glassfish-jersey-core-jersey-common = { module = "org.glassfish.jersey.core:jersey-common", version.ref = "org-glassfish-jersey-core-jersey-common" }
 org-glassfish-web-jakarta-servlet-jsp-jstl = { module = "org.glassfish.web:jakarta.servlet.jsp.jstl", version.ref = "org-glassfish-web-jakarta-servlet-jsp-jstl" }
 org-jspecify-jspecify = { module = "org.jspecify:jspecify", version.ref = "org-jspecify-jspecify" }
+org-junit-jupiter-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "org-junit-jupiter-junit-jupiter" }
+org-mockito-mockito-core = { module = "org.mockito:mockito-core", version.ref = "org-mockito-mockito-core" }
+org-mockito-mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "org-mockito-mockito-junit-jupiter" }
 org-slf4j-slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "org-slf4j-slf4j-api" }
 
 [bundles]
+jakarta = [
+    "jakarta-platform-jakarta-jakartaee-api",
+    "jakarta-servlet-jsp-jstl-jakarta-servlet-jsp-jstl-api",
+    "jakarta-ws-rs-jakarta-ws-rs-api"
+]
+
 logging = [
     "ch-qos-logback-logback-classic",
     "net-jmp-util-logging-logging-utilities",
     "org-slf4j-slf4j-api"
+]
+
+testing = [
+    "org-junit-jupiter-junit-jupiter",
+    "org-mockito-mockito-junit-jupiter"
 ]

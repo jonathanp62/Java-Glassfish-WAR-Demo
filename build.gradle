@@ -66,9 +66,14 @@ repositories {
 	mavenCentral()
 }
 
+configurations {
+	mockitoAgent {
+		transitive = false
+	}
+}
+
 dependencies {
-	compileOnly 		(libs.jakarta.platform.jakarta.jakartaee.api)
-	compileOnly 		(libs.jakarta.servlet.jsp.jstl.jakarta.servlet.jsp.jstl.api)
+	compileOnly 		(libs.bundles.jakarta)
 	compileOnly 		(libs.org.glassfish.web.jakarta.servlet.jsp.jstl)
 	compileOnly 		(libs.org.jspecify.jspecify)
 
@@ -76,6 +81,15 @@ dependencies {
 
 	errorprone			('com.uber.nullaway:nullaway:0.13.4')
 	errorprone 			('com.google.errorprone:error_prone_core:2.49.0')
+
+	testImplementation	(libs.jakarta.ws.rs.jakarta.ws.rs.api)
+
+	testImplementation	(libs.bundles.testing)
+
+	mockitoAgent 		(libs.org.mockito.mockito.core)
+
+	testRuntimeOnly		(libs.org.glassfish.jersey.core.jersey.common)
+	testRuntimeOnly		('org.junit.platform:junit-platform-launcher')
 }
 
 nullaway {
@@ -102,4 +116,21 @@ tasks.withType(Javadoc).configureEach {
     cjo.memberLevel = JavadocMemberLevel.PRIVATE
 
     sjdo.version(true)
+}
+
+tasks.test {
+	useJUnitPlatform()
+
+	// Register a cache-compliant provider for JVM arguments
+
+	jvmArgumentProviders.add(new CommandLineArgumentProvider() {
+		@InputFiles
+		@PathSensitive(PathSensitivity.RELATIVE)
+		FileCollection agentFiles = configurations.mockitoAgent
+
+		@Override
+		Iterable<String> asArguments() {
+			return ["-javaagent:${agentFiles.asPath}"]
+		}
+	})
 }

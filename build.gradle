@@ -83,7 +83,7 @@ dependencies {
 	errorprone 			('com.google.errorprone:error_prone_core:2.49.0')
 
 	testImplementation	(libs.jakarta.ws.rs.jakarta.ws.rs.api)
-
+	testImplementation	(libs.bundles.jakarta)
 	testImplementation	(libs.bundles.testing)
 
 	mockitoAgent 		(libs.org.mockito.mockito.core)

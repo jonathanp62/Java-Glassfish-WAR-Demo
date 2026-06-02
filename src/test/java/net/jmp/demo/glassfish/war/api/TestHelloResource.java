@@ -1,4 +1,4 @@
-package net.jmp.demo.glassfish.war;
+package net.jmp.demo.glassfish.war.api;
 
 /*
  * (#)TestHelloResource.java    0.1.0   06/01/2026
@@ -31,6 +31,8 @@ package net.jmp.demo.glassfish.war;
 import jakarta.ws.rs.core.Response;
 
 import java.util.ResourceBundle;
+
+import net.jmp.demo.glassfish.war.dto.StatusMessage;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package net.jmp.demo.glassfish.war;
+package net.jmp.demo.glassfish.war.api;
 
 /*
  * (#)HelloResource.java    0.1.0   05/30/2026
@@ -39,6 +39,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.ResourceBundle;
+
+import net.jmp.demo.glassfish.war.dto.StatusMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

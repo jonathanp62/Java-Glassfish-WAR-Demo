@@ -1,7 +1,7 @@
-package net.jmp.demo.glassfish.war;
+package net.jmp.demo.glassfish.war.i18n;
 
 /*
- * (#)StatusMessage.java    0.1.0   06/01/2026
+ * (#)MessageBundleProducer.java    0.1.0   05/31/2026
  *
  * @author   Jonathan Parker
  *
@@ -28,9 +28,24 @@ package net.jmp.demo.glassfish.war;
  * SOFTWARE.
  */
 
-/// The status message record
-///
-/// @param  status  java.lang.String
-/// @param  message java.lang.String
-public record StatusMessage(String status, String message) {
+import jakarta.enterprise.context.RequestScoped;
+
+import jakarta.enterprise.inject.Produces;
+
+import jakarta.inject.Named;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+/// The message bundle producer class
+@RequestScoped
+public class MessageBundleProducer {
+    /// The get bundle method
+    ///
+    /// @return java.util.ResourceBundle
+    @Produces
+    @Named("messages")
+    public ResourceBundle getBundle() {
+        return ResourceBundle.getBundle("messages", Locale.getDefault());
+    }
 }

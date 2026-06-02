@@ -28,6 +28,9 @@ package net.jmp.demo.glassfish.war.web;
  * SOFTWARE.
  */
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import jakarta.servlet.ServletException;
 
 import jakarta.servlet.annotation.WebServlet;
@@ -41,6 +44,8 @@ import java.io.PrintWriter;
 
 import java.nio.charset.StandardCharsets;
 
+import java.util.ResourceBundle;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +56,19 @@ import static net.jmp.util.logging.LoggerUtils.*;
 public class HelloServlet extends HttpServlet {
     // Initialize the SLF4J Logger
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    /// The messages resource bundle
+    private final transient ResourceBundle bundle;
+
+    /// The constructor
+    ///
+    /// @param  bundle  java.util.ResourceBundle
+    @Inject
+    public HelloServlet(@Named("messages") final ResourceBundle bundle) {
+        super();
+
+        this.bundle = bundle;
+    }
 
     /// The GET method
     ///
@@ -76,11 +94,19 @@ public class HelloServlet extends HttpServlet {
                     .append("<head>")
                     .append("<meta charset=\"UTF-8\">")
                     .append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">")
-                    .append("<title>HelloServlet</title>")
+                    .append("<title>")
+                    .append(this.bundle.getString("servlet.title"))
+                    .append("</title>")
                     .append("</head>")
                     .append("<body>")
-                    .append("<h1>Hello, ").append(name).append("!</h1>")
-                    .append("<p>Try: <code>?name=Jonathan</code></p>")
+                    .append("<h1>")
+                    .append(this.bundle.getString("hello"))
+                    .append(", ")
+                    .append(name)
+                    .append("!</h1>")
+                    .append("<p>")
+                    .append(this.bundle.getString("try"))
+                    .append(": <code>?name=Jonathan</code></p>")
                     .append("</body>")
                     .append("</html>");
         } catch (final RuntimeException re) {

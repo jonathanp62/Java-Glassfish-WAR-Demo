@@ -35,14 +35,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title><fmt:message key="title.jsp" /></title>
+        <title><fmt:message key="jsp.index.title" /></title>
     </head>
     <body>
-        <h2><fmt:message key="title.jsp" /></h2>
-        <p><fmt:message key="hello.jsp" /></p>
-        <p><a href="<c:url value='/api/hello' />"><fmt:message key="hello.resource.string" /></a></p>
-        <p><a href="<c:url value='/api/hello/json' />"><fmt:message key="hello.resource.json" /></a></p>
-        <p><a href="<c:url value='/servlet/hello' />"><fmt:message key="hello.servlet.string" /></a></p>
-        <p><a href="<c:url value='/servlet/form' />"><fmt:message key="form.demo.jsp" /></a></p>
+        <h2><fmt:message key="jsp.index.title" /></h2>
+        <p><fmt:message key="jsp.index.hello" /></p>
+        <p><a href="<c:url value='/api/hello' />"><fmt:message key="jsp.index.hello.resource.string" /></a></p>
+        <p><a href="<c:url value='/api/hello/json' />"><fmt:message key="jsp.index.hello.resource.json" /></a></p>
+        <p><a href="<c:url value='/servlet/hello' />"><fmt:message key="jsp.index.hello.servlet.string" /></a></p>
+        <p><a href="<c:url value='/servlet/form' />"><fmt:message key="jsp.index.form.demo" /></a></p>
     </body>
 </html>

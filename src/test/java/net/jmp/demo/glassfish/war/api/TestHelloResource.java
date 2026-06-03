@@ -54,7 +54,6 @@ class TestHelloResource {
         final HelloResource helloResource = new HelloResource(bundle);
 
         when(bundle.getString("resource.hello.greeting")).thenReturn("Hello (test)");
-        when(bundle.getString("resource.hello.info")).thenReturn("Some info");
 
         try (final Response response = helloResource.sayHello()) {
             assertEquals(200, response.getStatus());

@@ -42,6 +42,7 @@
         <p><fmt:message key="hello.jsp" /></p>
         <p><a href="<c:url value='/api/hello' />"><fmt:message key="hello.resource.string" /></a></p>
         <p><a href="<c:url value='/api/hello/json' />"><fmt:message key="hello.resource.json" /></a></p>
-        <p><a href="<c:url value='/hello' />"><fmt:message key="hello.servlet.string" /></a></p>
+        <p><a href="<c:url value='/servlet/hello' />"><fmt:message key="hello.servlet.string" /></a></p>
+        <p><a href="<c:url value='/servlet/form' />"><fmt:message key="form.demo.jsp" /></a></p>
     </body>
 </html>

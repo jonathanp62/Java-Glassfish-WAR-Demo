@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 import static net.jmp.util.logging.LoggerUtils.*;
 
 /// The hello servlet class
-@WebServlet(urlPatterns = "/hello")
+@WebServlet(urlPatterns = "/servlet/hello")
 public class HelloServlet extends HttpServlet {
     // Initialize the SLF4J Logger
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());

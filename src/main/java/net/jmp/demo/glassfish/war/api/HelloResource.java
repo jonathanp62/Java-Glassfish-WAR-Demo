@@ -77,9 +77,7 @@ public class HelloResource {
             this.logger.trace(entry());
         }
 
-        if (this.logger.isInfoEnabled()) {
-            this.logger.info(this.bundle.getString("resource.hello.info"));
-        }
+        this.logger.info("HelloResource: sayHello() called");
 
         final String result = this.bundle.getString("resource.hello.greeting");
         final Response response = Response.ok(result).build();

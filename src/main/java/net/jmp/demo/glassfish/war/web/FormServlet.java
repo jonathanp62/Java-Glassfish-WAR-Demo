@@ -110,8 +110,7 @@ public class FormServlet extends HttpServlet {
         try {
             request.setCharacterEncoding("UTF-8");
         } catch (final UnsupportedEncodingException uee) {
-            this.logger.error(this.bundle.getString("servlet.form.error.utf8"), uee);
-
+            this.logger.error("Error setting character encoding to UTF-8", uee);
             throw new ServletException(uee);
         }
 

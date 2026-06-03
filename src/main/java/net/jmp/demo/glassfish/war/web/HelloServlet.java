@@ -110,8 +110,7 @@ public class HelloServlet extends HttpServlet {
                     .append("</body>")
                     .append("</html>");
         } catch (final RuntimeException re) {
-            this.logger.error(this.bundle.getString("servlet.hello.error"), re);
-
+            this.logger.error("Error writing response", re);
             throw new ServletException(re);
         }
 

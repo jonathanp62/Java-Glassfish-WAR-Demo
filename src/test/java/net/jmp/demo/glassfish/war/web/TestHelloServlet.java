@@ -62,9 +62,9 @@ class TestHelloServlet {
         final StringWriter stringWriter = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(stringWriter);
 
-        when(bundle.getString("servlet.title")).thenReturn("Servlet Title");
-        when(bundle.getString("hello")).thenReturn("Hello");
-        when(bundle.getString("try")).thenReturn("Try");
+        when(bundle.getString("servlet.hello.title")).thenReturn("Servlet Title");
+        when(bundle.getString("servlet.hello.hello")).thenReturn("Hello");
+        when(bundle.getString("word.try")).thenReturn("Try");
         when(request.getParameter("name")).thenReturn(null);
         when(response.getWriter()).thenReturn(printWriter);
 
@@ -94,9 +94,9 @@ class TestHelloServlet {
         final StringWriter stringWriter = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(stringWriter);
 
-        when(bundle.getString("servlet.title")).thenReturn("Servlet Title");
-        when(bundle.getString("hello")).thenReturn("Hello");
-        when(bundle.getString("try")).thenReturn("Try");
+        when(bundle.getString("servlet.hello.title")).thenReturn("Servlet Title");
+        when(bundle.getString("servlet.hello.hello")).thenReturn("Hello");
+        when(bundle.getString("word.try")).thenReturn("Try");
         when(request.getParameter("name")).thenReturn("Jonathan");
         when(response.getWriter()).thenReturn(printWriter);
 
@@ -117,9 +117,9 @@ class TestHelloServlet {
         final StringWriter stringWriter = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(stringWriter);
 
-        when(bundle.getString("servlet.title")).thenReturn("Servlet Title");
-        when(bundle.getString("hello")).thenReturn("Hello");
-        when(bundle.getString("try")).thenReturn("Try");
+        when(bundle.getString("servlet.hello.title")).thenReturn("Servlet Title");
+        when(bundle.getString("servlet.hello.hello")).thenReturn("Hello");
+        when(bundle.getString("word.try")).thenReturn("Try");
         when(request.getParameter("name")).thenReturn("<script>alert(\"xss\")</script>");
         when(response.getWriter()).thenReturn(printWriter);
 

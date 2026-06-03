@@ -69,7 +69,6 @@ class TestHelloResource {
         final StatusMessage expected = new StatusMessage("OK", "The quick brown fox jumped over the lazy dog");
 
         when(bundle.getString("resource.hello.status.message")).thenReturn("The quick brown fox jumped over the lazy dog");
-        when(bundle.getString("word.ok")).thenReturn("OK");
 
         try (final Response response = helloResource.jsonHello()) {
             assertEquals(200, response.getStatus());

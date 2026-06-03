@@ -35,17 +35,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title><fmt:message key="form.title.jsp" /></title>
+        <title><fmt:message key="jsp.form.title" /></title>
     </head>
     <body>
-        <h2><fmt:message key="form.title.jsp" /></h2>
+        <h2><fmt:message key="jsp.form.title" /></h2>
 
         <c:if test="${not empty requestScope.successMessage}">
             <p><strong><c:out value="${requestScope.successMessage}" /></strong></p>
         </c:if>
 
         <c:if test="${not empty requestScope.errors}">
-            <h3><fmt:message key="form.validation.errors.jsp" /></h3>
+            <h3><fmt:message key="jsp.form.validation.errors" /></h3>
             <ul>
                 <c:forEach var="err" items="${requestScope.errors}">
                     <li><c:out value="${err}" /></li>
@@ -55,31 +55,31 @@
 
         <form method="post" action="<c:url value='/servlet/form' />">
             <p>
-                <label for="name"><fmt:message key="form.name.jsp" /></label><br />
+                <label for="name"><fmt:message key="jsp.form.name" /></label><br />
                 <input id="name" name="name" type="text" value="<c:out value='${requestScope.name}' />" />
             </p>
             <p>
-                <label for="email"><fmt:message key="form.email.jsp" /></label><br />
+                <label for="email"><fmt:message key="jsp.form.email" /></label><br />
                 <input id="email" name="email" type="text" value="<c:out value='${requestScope.email}' />" />
             </p>
             <p>
-                <label for="comment"><fmt:message key="form.comment.jsp" /></label><br />
+                <label for="comment"><fmt:message key="jsp.form.comment" /></label><br />
                 <textarea id="comment" name="comment" rows="5" cols="40"><c:out value="${requestScope.comment}" /></textarea>
             </p>
             <p>
-                <button type="submit"><fmt:message key="form.submit.jsp" /></button>
+                <button type="submit"><fmt:message key="jsp.form.submit" /></button>
             </p>
         </form>
 
         <c:if test="${not empty requestScope.name or not empty requestScope.email or not empty requestScope.comment}">
             <%-- Escaping the output with JSTL --%>
 
-            <h3><fmt:message key="form.submission.echo.jsp" /></h3>
-            <p><fmt:message key="form.name.jsp" />: <c:out value="${requestScope.name}" /></p>
-            <p><fmt:message key="form.email.jsp" />: <c:out value="${requestScope.email}" /></p>
-            <p><fmt:message key="form.comment.jsp" />: <c:out value="${requestScope.comment}" /></p>
+            <h3><fmt:message key="jsp.form.submission.echo" /></h3>
+            <p><fmt:message key="jsp.form.name" />: <c:out value="${requestScope.name}" /></p>
+            <p><fmt:message key="jsp.form.email" />: <c:out value="${requestScope.email}" /></p>
+            <p><fmt:message key="jsp.form.comment" />: <c:out value="${requestScope.comment}" /></p>
         </c:if>
 
-        <p><a href="<c:url value='/' />"><fmt:message key="form.home.jsp" /></a></p>
+        <p><a href="<c:url value='/' />"><fmt:message key="jsp.form.home" /></a></p>
     </body>
 </html>

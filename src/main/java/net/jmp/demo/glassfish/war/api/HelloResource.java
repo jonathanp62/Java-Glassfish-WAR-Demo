@@ -103,7 +103,7 @@ public class HelloResource {
         }
 
         final StatusMessage statusMessage = new StatusMessage(
-                this.bundle.getString("word.ok"),
+                "OK",
                 this.bundle.getString("resource.hello.status.message")
         );
 

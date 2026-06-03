@@ -77,9 +77,11 @@ public class HelloResource {
             this.logger.trace(entry());
         }
 
-        this.logger.info("HelloResource: sayHello() called");
+        if (this.logger.isInfoEnabled()) {
+            this.logger.info(this.bundle.getString("resource.hello.info"));
+        }
 
-        final String result = this.bundle.getString("hello.java");
+        final String result = this.bundle.getString("resource.hello.greeting");
         final Response response = Response.ok(result).build();
 
         if (this.logger.isTraceEnabled()) {
@@ -100,7 +102,11 @@ public class HelloResource {
             this.logger.trace(entry());
         }
 
-        final StatusMessage statusMessage = new StatusMessage("OK", "The quick brown fox jumped over the lazy dog");
+        final StatusMessage statusMessage = new StatusMessage(
+                this.bundle.getString("word.ok"),
+                this.bundle.getString("resource.hello.status.message")
+        );
+
         final Response response = Response.ok(statusMessage).build();
 
         if (this.logger.isTraceEnabled()) {

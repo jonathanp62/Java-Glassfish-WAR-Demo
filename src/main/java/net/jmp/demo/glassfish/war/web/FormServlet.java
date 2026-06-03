@@ -110,7 +110,7 @@ public class FormServlet extends HttpServlet {
         try {
             request.setCharacterEncoding("UTF-8");
         } catch (final UnsupportedEncodingException uee) {
-            this.logger.error("Error setting character encoding to UTF-8", uee);
+            this.logger.error(this.bundle.getString("servlet.form.error.utf8"), uee);
 
             throw new ServletException(uee);
         }
@@ -126,7 +126,7 @@ public class FormServlet extends HttpServlet {
         final List<String> errors = this.validateInput(name, email, comment);
 
         if (errors.isEmpty()) {
-            request.setAttribute("successMessage", "Form submitted successfully");
+            request.setAttribute("successMessage", this.bundle.getString("servlet.form.success"));
             request.getRequestDispatcher(FORM_JSP).forward(request, response);
         } else {
             request.setAttribute("errors", errors);
@@ -155,19 +155,19 @@ public class FormServlet extends HttpServlet {
         final List<String> errors = new ArrayList<>();
 
         if (name == null) {
-            errors.add("Name is required");
+            errors.add(this.bundle.getString("servlet.form.validation.required.name"));
         }
 
         if (email == null) {
-            errors.add("Email is required");
+            errors.add(this.bundle.getString("servlet.form.validation.required.email"));
         } else if (!looksLikeEmail(email)) {
-            errors.add("Email must be a valid email address");
+            errors.add(this.bundle.getString("servlet.form.validation.email"));
         }
 
         if (comment == null) {
-            errors.add("Comment is required");
+            errors.add(this.bundle.getString("servlet.form.validation.required.comment"));
         } else if (comment.length() < 10) {
-            errors.add("Comment must be at least 10 characters");
+            errors.add(this.bundle.getString("servlet.form.validation.comment"));
         }
 
         if (this.logger.isTraceEnabled()) {

@@ -95,22 +95,22 @@ public class HelloServlet extends HttpServlet {
                     .append("<meta charset=\"UTF-8\">")
                     .append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">")
                     .append("<title>")
-                    .append(this.bundle.getString("servlet.title"))
+                    .append(this.bundle.getString("servlet.hello.title"))
                     .append("</title>")
                     .append("</head>")
                     .append("<body>")
                     .append("<h1>")
-                    .append(this.bundle.getString("hello"))
+                    .append(this.bundle.getString("servlet.hello.hello"))
                     .append(", ")
                     .append(name)
                     .append("!</h1>")
                     .append("<p>")
-                    .append(this.bundle.getString("try"))
+                    .append(this.bundle.getString("word.try"))
                     .append(": <code>?name=Jonathan</code></p>")
                     .append("</body>")
                     .append("</html>");
         } catch (final RuntimeException re) {
-            this.logger.error("Error writing response", re);
+            this.logger.error(this.bundle.getString("servlet.hello.error"), re);
 
             throw new ServletException(re);
         }

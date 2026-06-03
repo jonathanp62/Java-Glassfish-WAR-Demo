@@ -51,10 +51,10 @@ class TestHelloResource {
     @Test
     void testSayHello() {
         final ResourceBundle bundle = mock(ResourceBundle.class);
-
-        when(bundle.getString("hello.java")).thenReturn("Hello (test)");
-
         final HelloResource helloResource = new HelloResource(bundle);
+
+        when(bundle.getString("resource.hello.greeting")).thenReturn("Hello (test)");
+        when(bundle.getString("resource.hello.info")).thenReturn("Some info");
 
         try (final Response response = helloResource.sayHello()) {
             assertEquals(200, response.getStatus());
@@ -67,6 +67,9 @@ class TestHelloResource {
         final ResourceBundle bundle = mock(ResourceBundle.class);
         final HelloResource helloResource = new HelloResource(bundle);
         final StatusMessage expected = new StatusMessage("OK", "The quick brown fox jumped over the lazy dog");
+
+        when(bundle.getString("resource.hello.status.message")).thenReturn("The quick brown fox jumped over the lazy dog");
+        when(bundle.getString("word.ok")).thenReturn("OK");
 
         try (final Response response = helloResource.jsonHello()) {
             assertEquals(200, response.getStatus());

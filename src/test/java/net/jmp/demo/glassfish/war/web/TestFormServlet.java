@@ -62,6 +62,9 @@ import static org.mockito.Mockito.when;
 /// The test class for the FormServlet class
 @ExtendWith(MockitoExtension.class)
 class TestFormServlet {
+    /// The form JSP
+    private static final String FORM_JSP = "/WEB-INF/jsp/form.jsp";
+
     @Test
     void testDoGetForwardsToFormJsp() throws Exception {
         final ResourceBundle bundle = mock(ResourceBundle.class);
@@ -69,13 +72,13 @@ class TestFormServlet {
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final RequestDispatcher dispatcher = mock(RequestDispatcher.class);
 
-        when(request.getRequestDispatcher("/form.jsp")).thenReturn(dispatcher);
+        when(request.getRequestDispatcher(FORM_JSP)).thenReturn(dispatcher);
 
         final FormServlet servlet = new FormServlet(bundle);
 
         servlet.doGet(request, response);
 
-        verify(request).getRequestDispatcher("/form.jsp");
+        verify(request).getRequestDispatcher("/WEB-INF/jsp/form.jsp");
         verify(dispatcher).forward(request, response);
     }
 
@@ -90,7 +93,7 @@ class TestFormServlet {
         when(request.getParameter("name")).thenReturn(" Jonathan ");
         when(request.getParameter("email")).thenReturn(" jonathan@example.com ");
         when(request.getParameter("comment")).thenReturn(" This is a test comment. ");
-        when(request.getRequestDispatcher("/form.jsp")).thenReturn(dispatcher);
+        when(request.getRequestDispatcher(FORM_JSP)).thenReturn(dispatcher);
 
         final FormServlet servlet = new FormServlet(bundle);
 
@@ -120,7 +123,7 @@ class TestFormServlet {
         when(request.getParameter("name")).thenReturn(" ");     // Trim to null applies
         when(request.getParameter("email")).thenReturn(null);   // Trim to null applies
         when(request.getParameter("comment")).thenReturn("");   // Trim to null applies
-        when(request.getRequestDispatcher("/form.jsp")).thenReturn(dispatcher);
+        when(request.getRequestDispatcher(FORM_JSP)).thenReturn(dispatcher);
 
         final FormServlet servlet = new FormServlet(bundle);
 
@@ -150,7 +153,7 @@ class TestFormServlet {
         when(request.getParameter("name")).thenReturn("Jonathan");
         when(request.getParameter("email")).thenReturn("jonathan");
         when(request.getParameter("comment")).thenReturn("Short");
-        when(request.getRequestDispatcher("/form.jsp")).thenReturn(dispatcher);
+        when(request.getRequestDispatcher(FORM_JSP)).thenReturn(dispatcher);
 
         final FormServlet servlet = new FormServlet(bundle);
 

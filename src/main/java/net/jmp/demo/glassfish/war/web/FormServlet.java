@@ -64,7 +64,7 @@ public class FormServlet extends HttpServlet {
     private final transient ResourceBundle bundle;
 
     /// The form JSP
-    private static final String FORM_JSP = "/form.jsp";
+    private static final String FORM_JSP = "/WEB-INF/jsp/form.jsp";
 
     /// The constructor
     ///
@@ -126,11 +126,11 @@ public class FormServlet extends HttpServlet {
 
         if (errors.isEmpty()) {
             request.setAttribute("successMessage", this.bundle.getString("servlet.form.success"));
-            request.getRequestDispatcher(FORM_JSP).forward(request, response);
         } else {
             request.setAttribute("errors", errors);
-            request.getRequestDispatcher(FORM_JSP).forward(request, response);
         }
+
+        request.getRequestDispatcher(FORM_JSP).forward(request, response);
 
         if (this.logger.isTraceEnabled()) {
             this.logger.trace(exit());

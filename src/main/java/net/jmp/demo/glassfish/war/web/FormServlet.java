@@ -47,6 +47,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import net.jmp.demo.glassfish.war.util.StringUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,9 +116,9 @@ public class FormServlet extends HttpServlet {
             throw new ServletException(uee);
         }
 
-        final String name = trimToNull(request.getParameter("name"));
-        final String email = trimToNull(request.getParameter("email"));
-        final String comment = trimToNull(request.getParameter("comment"));
+        final String name = StringUtils.trimToNull(request.getParameter("name"));
+        final String email = StringUtils.trimToNull(request.getParameter("email"));
+        final String comment = StringUtils.trimToNull(request.getParameter("comment"));
 
         request.setAttribute("name", name);
         request.setAttribute("email", email);
@@ -159,7 +161,7 @@ public class FormServlet extends HttpServlet {
 
         if (email == null) {
             errors.add(this.bundle.getString("servlet.form.validation.required.email"));
-        } else if (!looksLikeEmail(email)) {
+        } else if (!StringUtils.looksLikeEmail(email)) {
             errors.add(this.bundle.getString("servlet.form.validation.email"));
         }
 
@@ -174,27 +176,5 @@ public class FormServlet extends HttpServlet {
         }
 
         return errors;
-    }
-
-    /// The trim to null method
-    ///
-    /// @param  s   java.lang.String
-    /// @return     java.lang.String
-    private static @Nullable String trimToNull(final @Nullable String s) {
-        if (s == null) {
-            return null;
-        }
-
-        final String t = s.trim();
-
-        return t.isBlank() ? null : t;
-    }
-
-    /// The looks like email method
-    ///
-    /// @param  s   java.lang.String
-    /// @return     boolean
-    private static boolean looksLikeEmail(final String s) {
-        return s.contains("@");
     }
 }

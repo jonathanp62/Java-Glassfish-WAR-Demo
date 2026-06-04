@@ -49,6 +49,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import net.jmp.demo.glassfish.war.util.StringUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,7 +121,7 @@ public class RegistrationServlet extends HttpServlet {
             throw new ServletException(uee);
         }
 
-        final String email = trimToNull(request.getParameter("email"));
+        final String email = StringUtils.trimToNull(request.getParameter("email"));
 
         request.setAttribute("email", email);
 
@@ -154,7 +156,7 @@ public class RegistrationServlet extends HttpServlet {
 
         if (email == null) {
             errors.add(this.bundle.getString("servlet.registration.validation.required.email"));
-        } else if (!looksLikeEmail(email)) {
+        } else if (!StringUtils.looksLikeEmail(email)) {
             errors.add(this.bundle.getString("servlet.registration.validation.email"));
         }
 
@@ -163,27 +165,5 @@ public class RegistrationServlet extends HttpServlet {
         }
 
         return errors;
-    }
-
-    /// The trim to null method
-    ///
-    /// @param  s   java.lang.String
-    /// @return     java.lang.String
-    private static @Nullable String trimToNull(final @Nullable String s) {
-        if (s == null) {
-            return null;
-        }
-
-        final String t = s.trim();
-
-        return t.isBlank() ? null : t;
-    }
-
-    /// The looks like email method
-    ///
-    /// @param  s   java.lang.String
-    /// @return     boolean
-    private static boolean looksLikeEmail(final String s) {
-        return s.contains("@");
     }
 }

@@ -1,7 +1,7 @@
 package net.jmp.demo.glassfish.war.web;
 
 /*
- * (#)FormServlet.java  0.1.0   06/03/2026
+ * (#)RegistrationServlet.java  0.1.0   06/04/2026
  *
  * @author   Jonathan Parker
  *
@@ -43,6 +43,8 @@ import java.io.IOException;
 
 import java.io.UnsupportedEncodingException;
 
+import java.text.MessageFormat;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -56,29 +58,32 @@ import org.jspecify.annotations.Nullable;
 
 import static net.jmp.util.logging.LoggerUtils.*;
 
-/// The form servlet class
-@WebServlet(urlPatterns = "/servlet/form")
-public class FormServlet extends HttpServlet {
+/// The registration servlet class
+@WebServlet(urlPatterns = "/servlet/register")
+public class RegistrationServlet extends HttpServlet {
     // Initialize the SLF4J Logger
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /// The messages resource bundle
     private final transient ResourceBundle bundle;
 
-    /// The form JSP
-    private static final String FORM_JSP = "/WEB-INF/jsp/form.jsp";
+    /// The registration form JSP
+    private static final String REGISTER_JSP = "/WEB-INF/jsp/register.jsp";
+
+    /// The registration successful JSP
+    private static final String REGISTERED_JSP = "/WEB-INF/jsp/registered.jsp";
 
     /// The constructor
     ///
     /// @param  bundle  java.util.ResourceBundle
     @Inject
-    public FormServlet(@Named("messages") final ResourceBundle bundle) {
+    public RegistrationServlet(@Named("messages") final ResourceBundle bundle) {
         super();
 
         this.bundle = bundle;
     }
 
-    /// The GET method. Called from /servlet/form.
+    /// The GET method. Called from /servlet/register.
     ///
     /// @param  request     jakarta.servlet.http.HttpServletRequest
     /// @param  response    jakarta.servlet.http.HttpServletResponse
@@ -90,7 +95,7 @@ public class FormServlet extends HttpServlet {
             this.logger.trace(entryWith(request, response));
         }
 
-        request.getRequestDispatcher(FORM_JSP).forward(request, response);
+        request.getRequestDispatcher(REGISTER_JSP).forward(request, response);
 
         if (this.logger.isTraceEnabled()) {
             this.logger.trace(exit());
@@ -116,23 +121,22 @@ public class FormServlet extends HttpServlet {
             throw new ServletException(uee);
         }
 
-        final String name = StringUtils.trimToNull(request.getParameter("name"));
         final String email = StringUtils.trimToNull(request.getParameter("email"));
-        final String comment = StringUtils.trimToNull(request.getParameter("comment"));
 
-        request.setAttribute("name", name);
         request.setAttribute("email", email);
-        request.setAttribute("comment", comment);
 
-        final List<String> errors = this.validateInput(name, email, comment);
+        final List<String> errors = this.validateInput(email);
 
         if (errors.isEmpty()) {
-            request.setAttribute("successMessage", this.bundle.getString("servlet.form.success"));
+            final String pattern = this.bundle.getString("servlet.registration.success");
+            final String successMessage = MessageFormat.format(pattern, email);
+
+            request.setAttribute("successMessage", successMessage);
         } else {
             request.setAttribute("errors", errors);
         }
 
-        request.getRequestDispatcher(FORM_JSP).forward(request, response);
+        request.getRequestDispatcher(REGISTERED_JSP).forward(request, response);
 
         if (this.logger.isTraceEnabled()) {
             this.logger.trace(exit());
@@ -141,34 +145,19 @@ public class FormServlet extends HttpServlet {
 
     /// The validate input method
     ///
-    /// @param  name        java.lang.String
-    /// @param  email       java.lang.String
-    /// @param  comment     java.lang.String
-    /// @return             java.util.List<java.lang.String>
-    private List<String> validateInput(
-            final @Nullable String name,
-            final @Nullable String email,
-            final @Nullable String comment) {
+    /// @param  email   java.lang.String
+    /// @return         java.util.List<java.lang.String>
+    private List<String> validateInput(final @Nullable String email) {
         if (this.logger.isTraceEnabled()) {
-            this.logger.trace(entryWith(name, email, comment));
+            this.logger.trace(entryWith(email));
         }
 
         final List<String> errors = new ArrayList<>();
 
-        if (name == null) {
-            errors.add(this.bundle.getString("servlet.form.validation.required.name"));
-        }
-
         if (email == null) {
-            errors.add(this.bundle.getString("servlet.form.validation.required.email"));
+            errors.add(this.bundle.getString("servlet.registration.validation.required.email"));
         } else if (!StringUtils.looksLikeEmail(email)) {
-            errors.add(this.bundle.getString("servlet.form.validation.email"));
-        }
-
-        if (comment == null) {
-            errors.add(this.bundle.getString("servlet.form.validation.required.comment"));
-        } else if (comment.length() < 10) {
-            errors.add(this.bundle.getString("servlet.form.validation.comment"));
+            errors.add(this.bundle.getString("servlet.registration.validation.email"));
         }
 
         if (this.logger.isTraceEnabled()) {

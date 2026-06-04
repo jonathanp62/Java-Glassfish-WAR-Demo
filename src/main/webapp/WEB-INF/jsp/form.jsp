@@ -37,6 +37,7 @@
     <head>
         <title><fmt:message key="jsp.form.title" /></title>
         <link rel="stylesheet" href="<c:url value='/static/css/styles.css' />" />
+        <script src="${pageContext.request.contextPath}/static/js/global.js"></script>
     </head>
     <body>
         <h2><fmt:message key="jsp.form.title" /></h2>

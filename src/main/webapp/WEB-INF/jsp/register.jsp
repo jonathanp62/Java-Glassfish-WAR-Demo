@@ -1,5 +1,5 @@
 <%--
- (#)index.jsp   0.1.0   05/30/2026
+ (#)register.jsp    0.1.0   06/04/2026
 
  @author   Jonathan Parker
  @version  0.1.0
@@ -35,15 +35,21 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title><fmt:message key="jsp.index.title" /></title>
+        <title><fmt:message key="jsp.register.title" /></title>
     </head>
     <body>
-        <h2><fmt:message key="jsp.index.title" /></h2>
-        <p><fmt:message key="jsp.index.hello" /></p>
-        <p><a href="<c:url value='/api/hello' />"><fmt:message key="jsp.index.hello.resource.string" /></a></p>
-        <p><a href="<c:url value='/api/hello/json' />"><fmt:message key="jsp.index.hello.resource.json" /></a></p>
-        <p><a href="<c:url value='/servlet/hello' />"><fmt:message key="jsp.index.hello.servlet.string" /></a></p>
-        <p><a href="<c:url value='/servlet/form' />"><fmt:message key="jsp.index.form.demo" /></a></p>
-        <p><a href="<c:url value='/servlet/register' />"><fmt:message key="jsp.index.register" /></a></p>
+        <h2><fmt:message key="jsp.register.title" /></h2>
+
+        <form method="post" action="<c:url value='/servlet/register' />">
+            <p>
+                <label for="email"><fmt:message key="jsp.register.email" /></label><br />
+                <input id="email" name="email" type="text" value="<c:out value='${requestScope.email}' />" />
+            </p>
+            <p>
+                <button type="submit"><fmt:message key="jsp.register.submit" /></button>
+            </p>
+        </form>
+
+        <p><a href="<c:url value='/' />"><fmt:message key="jsp.register.home" /></a></p>
     </body>
 </html>

@@ -1,5 +1,5 @@
 <%--
- (#)index.jsp   0.1.0   05/30/2026
+ (#)registered.jsp  0.1.0   06/04/2026
 
  @author   Jonathan Parker
  @version  0.1.0
@@ -34,16 +34,25 @@
 
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title><fmt:message key="jsp.index.title" /></title>
-    </head>
-    <body>
-        <h2><fmt:message key="jsp.index.title" /></h2>
-        <p><fmt:message key="jsp.index.hello" /></p>
-        <p><a href="<c:url value='/api/hello' />"><fmt:message key="jsp.index.hello.resource.string" /></a></p>
-        <p><a href="<c:url value='/api/hello/json' />"><fmt:message key="jsp.index.hello.resource.json" /></a></p>
-        <p><a href="<c:url value='/servlet/hello' />"><fmt:message key="jsp.index.hello.servlet.string" /></a></p>
-        <p><a href="<c:url value='/servlet/form' />"><fmt:message key="jsp.index.form.demo" /></a></p>
-        <p><a href="<c:url value='/servlet/register' />"><fmt:message key="jsp.index.register" /></a></p>
-    </body>
+  <head>
+    <title><fmt:message key="jsp.registered.title" /></title>
+  </head>
+  <body>
+    <h2><fmt:message key="jsp.registered.title" /></h2>
+
+    <c:if test="${not empty requestScope.successMessage}">
+      <p><h3><c:out value="${requestScope.successMessage}" /></h3></p>
+    </c:if>
+
+    <c:if test="${not empty requestScope.errors}">
+      <h3><fmt:message key="jsp.register.validation.errors" /></h3>
+      <ul>
+        <c:forEach var="err" items="${requestScope.errors}">
+          <li><c:out value="${err}" /></li>
+        </c:forEach>
+      </ul>
+    </c:if>
+
+    <p><a href="<c:url value='/' />"><fmt:message key="jsp.registered.home" /></a></p>
+  </body>
 </html>

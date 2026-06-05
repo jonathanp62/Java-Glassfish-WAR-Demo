@@ -36,6 +36,8 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title><fmt:message key="jsp.register.title" /></title>
+        <link rel="stylesheet" href="<c:url value='/static/css/styles.css' />" />
+        <script src="${pageContext.request.contextPath}/static/js/global.js"></script>
     </head>
     <body>
         <h2><fmt:message key="jsp.register.title" /></h2>

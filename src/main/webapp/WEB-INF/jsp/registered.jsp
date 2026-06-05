@@ -36,6 +36,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title><fmt:message key="jsp.registered.title" /></title>
+    <link rel="stylesheet" href="<c:url value='/static/css/styles.css' />" />
   </head>
   <body>
     <h2><fmt:message key="jsp.registered.title" /></h2>

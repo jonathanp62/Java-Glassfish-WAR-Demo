@@ -29,23 +29,24 @@
 --%>
 
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isErrorPage="true" %>
 
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>500 - Server Error</title>
+        <title><fmt:message key="jsp.500.title" /></title>
         <link rel="stylesheet" href="<c:url value='/static/css/styles.css' />" />
     </head>
     <body>
-        <h2>500 - Server Error</h2>
-        <p>An unexpected error occurred while processing your request</p>
+        <h2><fmt:message key="jsp.500.title" /></h2>
+        <p><fmt:message key="jsp.500.message" /></p>
 
         <c:if test="${not empty pageContext.exception}">
-            <p><strong>Exception:</strong> <c:out value="${pageContext.exception.class.name}" /></p>
-            <p><strong>Message:</strong> <c:out value="${pageContext.exception.message}" /></p>
+            <p><strong><fmt:message key="word.exception" />:</strong> <c:out value="${pageContext.exception.class.name}" /></p>
+            <p><strong><fmt:message key="word.message" />:</strong> <c:out value="${pageContext.exception.message}" /></p>
         </c:if>
 
-        <p><a href="<c:url value='/' />">Home</a></p>
+        <p><a href="<c:url value='/' />"><fmt:message key="jsp.500.home" /></a></p>
     </body>
 </html>

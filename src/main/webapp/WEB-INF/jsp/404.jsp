@@ -29,22 +29,23 @@
 --%>
 
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isErrorPage="true" %>
 
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>404 - Not Found</title>
+        <title><fmt:message key="jsp.404.title" /></title>
         <link rel="stylesheet" href="<c:url value='/static/css/styles.css' />" />
     </head>
     <body>
-        <h2>404 - Not Found</h2>
-        <p>The requested page could not be found</p>
+        <h2><fmt:message key="jsp.404.title" /></h2>
+        <p><fmt:message key="jsp.404.message" /></p>
 
         <c:if test="${not empty pageContext.errorData}">
-            <p><strong>Path:</strong> <c:out value="${pageContext.errorData.requestURI}" /></p>
+            <p><strong><fmt:message key="word.path" />:</strong> <c:out value="${pageContext.errorData.requestURI}" /></p>
         </c:if>
 
-        <p><a href="<c:url value='/' />">Home</a></p>
+        <p><a href="<c:url value='/' />"><fmt:message key="jsp.404.home" /></a></p>
     </body>
 </html>

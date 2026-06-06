@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!--
- (#)web.xml 0.1.0   05/31/2026
+<%--
+ (#)404.jsp   0.1.0   06/06/2026
 
  @author   Jonathan Parker
  @version  0.1.0
@@ -28,30 +26,25 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
--->
+--%>
 
-<web-app
-        xmlns="https://jakarta.ee/xml/ns/jakartaee"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd"
-        version="6.1">
-    <context-param>
-        <param-name>jakarta.servlet.jsp.jstl.fmt.localizationContext</param-name>
-        <param-value>messages</param-value>
-    </context-param>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isErrorPage="true" %>
 
-    <error-page>
-        <error-code>404</error-code>
-        <location>/WEB-INF/jsp/404.jsp</location>
-    </error-page>
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>404 - Not Found</title>
+        <link rel="stylesheet" href="<c:url value='/static/css/styles.css' />" />
+    </head>
+    <body>
+        <h2>404 - Not Found</h2>
+        <p>The requested page could not be found</p>
 
-    <error-page>
-        <error-code>500</error-code>
-        <location>/WEB-INF/jsp/500.jsp</location>
-    </error-page>
+        <c:if test="${not empty pageContext.errorData}">
+            <p><strong>Path:</strong> <c:out value="${pageContext.errorData.requestURI}" /></p>
+        </c:if>
 
-    <error-page>
-        <exception-type>java.lang.Throwable</exception-type>
-        <location>/WEB-INF/jsp/500.jsp</location>
-    </error-page>
-</web-app>
+        <p><a href="<c:url value='/' />">Home</a></p>
+    </body>
+</html>

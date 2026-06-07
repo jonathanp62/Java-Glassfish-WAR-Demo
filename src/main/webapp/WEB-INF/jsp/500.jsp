@@ -1,5 +1,5 @@
 <%--
- (#)index.jsp   0.1.0   05/30/2026
+ (#)500.jsp   0.1.0   06/06/2026
 
  @author   Jonathan Parker
  @version  0.1.0
@@ -30,22 +30,23 @@
 
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isErrorPage="true" %>
 
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title><fmt:message key="jsp.index.title" /></title>
+        <title><fmt:message key="jsp.500.title" /></title>
         <link rel="stylesheet" href="<c:url value='/static/css/styles.css' />" />
     </head>
     <body>
-        <h2><fmt:message key="jsp.index.title" /></h2>
-        <p><fmt:message key="jsp.index.hello" /></p>
-        <p><a href="<c:url value='/api/hello' />"><fmt:message key="jsp.index.hello.resource.string" /></a></p>
-        <p><a href="<c:url value='/api/hello/json' />"><fmt:message key="jsp.index.hello.resource.json" /></a></p>
-        <p><a href="<c:url value='/servlet/error' />"><fmt:message key="jsp.index.error" /></a></p>
-        <p><a href="<c:url value='/servlet/hello' />"><fmt:message key="jsp.index.hello.servlet.string" /></a></p>
-        <p><a href="<c:url value='/servlet/form' />"><fmt:message key="jsp.index.form.demo" /></a></p>
-        <p><a href="<c:url value='/servlet/register' />"><fmt:message key="jsp.index.register" /></a></p>
+        <h2><fmt:message key="jsp.500.title" /></h2>
+        <p><fmt:message key="jsp.500.message" /></p>
+
+        <c:if test="${not empty pageContext.exception}">
+            <p><strong><fmt:message key="word.exception" />:</strong> <c:out value="${pageContext.exception.class.name}" /></p>
+            <p><strong><fmt:message key="word.message" />:</strong> <c:out value="${pageContext.exception.message}" /></p>
+        </c:if>
+
+        <p><a href="<c:url value='/' />"><fmt:message key="jsp.500.home" /></a></p>
     </body>
 </html>

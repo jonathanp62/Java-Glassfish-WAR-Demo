@@ -31,7 +31,7 @@
 -->
 
 <configuration scan="false" scanPeriod="60 seconds" packagingData="false" debug="false">
-    <property name="LOG_DIR" value="${HOME}/IDEA-Projects/Glassfish-WAR-Demo/logs" />
+    <property name="LOG_DIR" value="/var/logs/glassfish/glassfish-war-demo" />
 
     <appender name="MAIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_DIR}/glassfish-war-demo.log</file>

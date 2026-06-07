@@ -28,6 +28,8 @@ package net.jmp.demo.glassfish.war.filter;
  * SOFTWARE.
  */
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -41,6 +43,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +54,19 @@ import static net.jmp.util.logging.LoggerUtils.*;
 /// The request logging filter class
 @WebFilter(urlPatterns = "/*")
 public class RequestLoggingFilter implements Filter {
+    /// The messages resource bundle
+    private final ResourceBundle bundle;
+
+    /// The constructor
+    ///
+    /// @param  bundle  java.util.ResourceBundle
+    @Inject
+    public RequestLoggingFilter(@Named("messages") final ResourceBundle bundle) {
+        super();
+
+        this.bundle = bundle;
+    }
+
     // Initialize the SLF4J Logger
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -76,14 +94,24 @@ public class RequestLoggingFilter implements Filter {
             final long elapsedMillis = (System.nanoTime() - start) / 1_000_000L;
 
             if (request instanceof HttpServletRequest httpRequest && response instanceof HttpServletResponse httpResponse) {
-                this.logger.info(
-                        "{} {} completed with status {} in {} ms",
-                        httpRequest.getMethod(),
-                        httpRequest.getRequestURI(),
-                        httpResponse.getStatus(),
-                        elapsedMillis);
+                if (this.logger.isInfoEnabled()) {
+                    final String pattern = this.bundle.getString("filter.request.logging.http");
+                    final String successMessage = MessageFormat.format(
+                            pattern, httpRequest.getMethod(),
+                            httpRequest.getRequestURI(),
+                            httpResponse.getStatus(),
+                            elapsedMillis
+                    );
+
+                    this.logger.info(successMessage);
+                }
             } else {
-                this.logger.info("Request completed in {} ms", elapsedMillis);
+                if (this.logger.isInfoEnabled()) {
+                    final String pattern = this.bundle.getString("filter.request.logging");
+                    final String successMessage = MessageFormat.format(pattern, elapsedMillis);
+
+                    this.logger.info(successMessage);
+                }
             }
         }
 

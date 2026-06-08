@@ -3,5 +3,24 @@ Glassfish-WAR-Demo
 
 A demonstration of a basic WAR application running Glassfish 8.
 
+= REST API Endpoints
+
+[options="header"]
+|=======================
+|Endpoint        | HTTP Method | Payload | HTTP Responses | Description
+|/api/hello      | GET | None | 200 OK | Returns a simple hello message as text
+|/api/hello/json | GET | None | 200 OK | Returns a simple hello message as JSON
+|=======================
+
+== Gradle Tasks for Glassfish deployment
+
+Add the --no-configuration-cache option to disable the configuration cache as needed.
+
+[options="header"]
+|=======================
+|Task Name | Application Invocation
+|deploy    | No arguments
+|=======================
+
 Current version: 0.1.0.
 ~~~~~~~~~~~~~~~~~~~~~~~

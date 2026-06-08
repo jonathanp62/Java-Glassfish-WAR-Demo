@@ -38,8 +38,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-import java.util.ResourceBundle;
-
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,15 +54,13 @@ import static org.mockito.Mockito.*;
 class TestRequestLoggingFilter {
     @Test
     void testDoFilterInvokesChainForHttpRequest() throws Exception {
-        final ResourceBundle bundle = mock(ResourceBundle.class);
         final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final FilterChain chain = mock(FilterChain.class);
-        final RequestLoggingFilter filter = new RequestLoggingFilter(bundle);
+        final RequestLoggingFilter filter = new RequestLoggingFilter();
 
         /* Leniency is required because the logger is not mocked and is tested for info level */
 
-        lenient().when(bundle.getString("filter.request.logging.http")).thenReturn("{0} {1} completed with status {2} in {3} ms");
         lenient().when(request.getMethod()).thenReturn("GET");
         lenient().when(request.getRequestURI()).thenReturn("/servlet/hello");
         lenient().when(response.getStatus()).thenReturn(200);
@@ -76,13 +72,10 @@ class TestRequestLoggingFilter {
 
     @Test
     void testDoFilterInvokesChainForNonHttpRequest() throws Exception {
-        final ResourceBundle bundle = mock(ResourceBundle.class);
         final ServletRequest request = mock(ServletRequest.class);
         final ServletResponse response = mock(ServletResponse.class);
         final FilterChain chain = mock(FilterChain.class);
-        final RequestLoggingFilter filter = new RequestLoggingFilter(bundle);
-
-        lenient().when(bundle.getString("filter.request.logging")).thenReturn("Request completed in {0} ms");
+        final RequestLoggingFilter filter = new RequestLoggingFilter();
 
         filter.doFilter(request, response, chain);
 
@@ -91,11 +84,10 @@ class TestRequestLoggingFilter {
 
     @Test
     void testDoFilterPropagatesIOExceptionFromChain() throws Exception {
-        final ResourceBundle bundle = mock(ResourceBundle.class);
         final ServletRequest request = mock(ServletRequest.class);
         final ServletResponse response = mock(ServletResponse.class);
         final FilterChain chain = mock(FilterChain.class);
-        final RequestLoggingFilter filter = new RequestLoggingFilter(bundle);
+        final RequestLoggingFilter filter = new RequestLoggingFilter();
         final IOException exception = new IOException("I/O failure");
 
         doThrow(exception).when(chain).doFilter(request, response);
@@ -107,11 +99,10 @@ class TestRequestLoggingFilter {
 
     @Test
     void testDoFilterPropagatesServletExceptionFromChain() throws Exception {
-        final ResourceBundle bundle = mock(ResourceBundle.class);
         final ServletRequest request = mock(ServletRequest.class);
         final ServletResponse response = mock(ServletResponse.class);
         final FilterChain chain = mock(FilterChain.class);
-        final RequestLoggingFilter filter = new RequestLoggingFilter(bundle);
+        final RequestLoggingFilter filter = new RequestLoggingFilter();
         final ServletException exception = new ServletException("Servlet failure");
 
         doThrow(exception).when(chain).doFilter(request, response);

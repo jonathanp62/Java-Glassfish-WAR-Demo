@@ -28,13 +28,7 @@ package net.jmp.demo.glassfish.war.filter;
  * SOFTWARE.
  */
 
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import jakarta.servlet.*;
 
 import jakarta.servlet.annotation.WebFilter;
 
@@ -42,9 +36,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,21 +45,22 @@ import static net.jmp.util.logging.LoggerUtils.*;
 /// The request logging filter class
 @WebFilter(urlPatterns = "/*")
 public class RequestLoggingFilter implements Filter {
-    /// The messages resource bundle
-    private final ResourceBundle bundle;
-
-    /// The constructor
-    ///
-    /// @param  bundle  java.util.ResourceBundle
-    @Inject
-    public RequestLoggingFilter(@Named("messages") final ResourceBundle bundle) {
-        super();
-
-        this.bundle = bundle;
-    }
-
     // Initialize the SLF4J Logger
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    /// The default constructor
+    public RequestLoggingFilter() {
+        super();
+    }
+
+    /// The initialization method
+    ///
+    /// @param  filterConfig    jakarta.servlet.FilterConfig
+    /// @throws                 jakarta.servlet.ServletException When an error occurs
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        this.logger.info("Initializing the request logging filter");
+    }
 
     /// The do filter method
     ///
@@ -94,28 +86,18 @@ public class RequestLoggingFilter implements Filter {
             final long elapsedMillis = (System.nanoTime() - start) / 1_000_000L;
 
             if (request instanceof HttpServletRequest httpRequest && response instanceof HttpServletResponse httpResponse) {
-                System.out.println("Before logger check");
-                System.out.println("httpResponse: " + httpResponse);
                 if (this.logger.isInfoEnabled()) {
-                    final String pattern = this.bundle.getString("filter.request.logging.http");
-                    System.out.println("pattern: " + pattern);
-                    final String successMessage = MessageFormat.format(
-                            pattern,
+                    this.logger.info(
+                            "{} {} completed with status {} in {} ms",
                             httpRequest.getMethod(),
                             httpRequest.getRequestURI(),
                             httpResponse.getStatus(),
                             elapsedMillis
                     );
-
-                    System.out.println("successMessage: " + successMessage);
-                    this.logger.info(successMessage);
                 }
             } else {
-                if (this.logger.isInfoEnabled()) {
-                    final String pattern = this.bundle.getString("filter.request.logging");
-                    final String successMessage = MessageFormat.format(pattern, elapsedMillis);
-
-                    this.logger.info(successMessage);
+                if (this.logger.isInfoEnabled() && this.logger.isInfoEnabled()) {
+                    this.logger.info("Request completed in {} ms", elapsedMillis);
                 }
             }
         }

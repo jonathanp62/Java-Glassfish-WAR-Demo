@@ -96,7 +96,7 @@ public class RequestLoggingFilter implements Filter {
                     );
                 }
             } else {
-                if (this.logger.isInfoEnabled() && this.logger.isInfoEnabled()) {
+                if (this.logger.isInfoEnabled()) {
                     this.logger.info("Request completed in {} ms", elapsedMillis);
                 }
             }

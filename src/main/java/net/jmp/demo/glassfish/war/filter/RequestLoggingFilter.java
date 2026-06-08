@@ -94,15 +94,20 @@ public class RequestLoggingFilter implements Filter {
             final long elapsedMillis = (System.nanoTime() - start) / 1_000_000L;
 
             if (request instanceof HttpServletRequest httpRequest && response instanceof HttpServletResponse httpResponse) {
+                System.out.println("Before logger check");
+                System.out.println("httpResponse: " + httpResponse);
                 if (this.logger.isInfoEnabled()) {
                     final String pattern = this.bundle.getString("filter.request.logging.http");
+                    System.out.println("pattern: " + pattern);
                     final String successMessage = MessageFormat.format(
-                            pattern, httpRequest.getMethod(),
+                            pattern,
+                            httpRequest.getMethod(),
                             httpRequest.getRequestURI(),
                             httpResponse.getStatus(),
                             elapsedMillis
                     );
 
+                    System.out.println("successMessage: " + successMessage);
                     this.logger.info(successMessage);
                 }
             } else {

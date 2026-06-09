@@ -40,12 +40,12 @@
     </head>
     <body>
         <h2><fmt:message key="jsp.404.title" /></h2>
-        <p><fmt:message key="jsp.404.message" /></p>
+        <h3><fmt:message key="jsp.404.message" /></h3>
 
         <c:if test="${not empty pageContext.errorData}">
             <p><strong><fmt:message key="word.path" />:</strong> <c:out value="${pageContext.errorData.requestURI}" /></p>
         </c:if>
 
-        <p><a href="<c:url value='/' />"><fmt:message key="jsp.404.home" /></a></p>
+        <h3><a href="<c:url value='/' />"><fmt:message key="jsp.404.home" /></a></h3>
     </body>
 </html>

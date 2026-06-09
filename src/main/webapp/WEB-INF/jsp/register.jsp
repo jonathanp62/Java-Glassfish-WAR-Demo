@@ -52,6 +52,6 @@
             </p>
         </form>
 
-        <p><a href="<c:url value='/' />"><fmt:message key="jsp.register.home" /></a></p>
+        <h3><a href="<c:url value='/' />"><fmt:message key="jsp.register.home" /></a></h3>
     </body>
 </html>

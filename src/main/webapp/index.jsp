@@ -40,7 +40,7 @@
     </head>
     <body>
         <h2><fmt:message key="jsp.index.title" /></h2>
-        <p><fmt:message key="jsp.index.hello" /></p>
+        <h3><fmt:message key="jsp.index.hello" /></h3>
         <p><a href="<c:url value='/api/hello' />"><fmt:message key="jsp.index.hello.resource.string" /></a></p>
         <p><a href="<c:url value='/api/hello/json' />"><fmt:message key="jsp.index.hello.resource.json" /></a></p>
         <p><a href="<c:url value='/servlet/error' />"><fmt:message key="jsp.index.error" /></a></p>

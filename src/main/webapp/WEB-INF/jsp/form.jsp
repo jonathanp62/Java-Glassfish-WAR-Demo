@@ -82,6 +82,6 @@
             <p><fmt:message key="jsp.form.comment" />: <c:out value="${requestScope.comment}" /></p>
         </c:if>
 
-        <p><a href="<c:url value='/' />"><fmt:message key="jsp.form.home" /></a></p>
+        <h3><a href="<c:url value='/' />"><fmt:message key="jsp.form.home" /></a></h3>
     </body>
 </html>

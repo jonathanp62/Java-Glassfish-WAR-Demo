@@ -54,6 +54,6 @@
       </ul>
     </c:if>
 
-    <p><a href="<c:url value='/' />"><fmt:message key="jsp.registered.home" /></a></p>
+    <h3><a href="<c:url value='/' />"><fmt:message key="jsp.registered.home" /></a></h3>
   </body>
 </html>

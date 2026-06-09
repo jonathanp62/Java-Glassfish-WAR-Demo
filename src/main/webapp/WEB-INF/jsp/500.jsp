@@ -40,13 +40,13 @@
     </head>
     <body>
         <h2><fmt:message key="jsp.500.title" /></h2>
-        <p><fmt:message key="jsp.500.message" /></p>
+        <h3><fmt:message key="jsp.500.message" /></h3>
 
         <c:if test="${not empty pageContext.exception}">
             <p><strong><fmt:message key="word.exception" />:</strong> <c:out value="${pageContext.exception.class.name}" /></p>
             <p><strong><fmt:message key="word.message" />:</strong> <c:out value="${pageContext.exception.message}" /></p>
         </c:if>
 
-        <p><a href="<c:url value='/' />"><fmt:message key="jsp.500.home" /></a></p>
+        <h3><a href="<c:url value='/' />"><fmt:message key="jsp.500.home" /></a></h3>
     </body>
 </html>

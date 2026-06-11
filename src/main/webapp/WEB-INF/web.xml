@@ -54,4 +54,24 @@
         <exception-type>java.lang.Throwable</exception-type>
         <location>/WEB-INF/jsp/500.jsp</location>
     </error-page>
+
+    <servlet>
+        <servlet-name>InitParamXmlServlet</servlet-name>
+        <servlet-class>net.jmp.demo.glassfish.war.web.InitParamXmlServlet</servlet-class>
+
+        <init-param>
+            <param-name>name</param-name>
+            <param-value>Emily</param-value>
+        </init-param>
+
+        <init-param>
+            <param-name>email</param-name>
+            <param-value>emily@example.com</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>InitParamXmlServlet</servlet-name>
+        <url-pattern>/servlet/init-param-xml</url-pattern>
+    </servlet-mapping>
 </web-app>

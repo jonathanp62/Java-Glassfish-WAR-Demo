@@ -50,7 +50,7 @@ apply plugin: 'net.jmp.gradle.plugin.projectinfo-info'
 
 ext {
 	project.group = 'net.jmp.demo.glassfish.war'
-	project.version = '0.2.0-SNAPSHOT'
+	project.version = "${appVersion}-SNAPSHOT"
 	project.description = 'to demonstrate a basic WAR application running Glassfish 8'
 }
 
@@ -96,6 +96,12 @@ dependencies {
 
 nullaway {
 	annotatedPackages.add('net.jmp.demo.glassfish.war')
+}
+
+war {
+	filesMatching('WEB-INF/web.xml') {
+		expand(appVersion: project.version)
+	}
 }
 
 tasks.compileJava {

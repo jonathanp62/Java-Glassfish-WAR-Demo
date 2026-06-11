@@ -1,8 +1,9 @@
 <%--
+ (#)index.jsp   0.2.0   06/11/2026
  (#)index.jsp   0.1.0   05/30/2026
 
  @author   Jonathan Parker
- @version  0.1.0
+ @version  0.2.0
  @since    0.1.0
 
  MIT License
@@ -41,6 +42,7 @@
     <body>
         <h2><fmt:message key="jsp.index.title" /></h2>
         <h3><fmt:message key="jsp.index.hello" /></h3>
+        <h3><fmt:message key="word.version" /> ${initParam.appVersion}</h3>
         <p><a href="<c:url value='/api/hello' />"><fmt:message key="jsp.index.hello.resource.string" /></a></p>
         <p><a href="<c:url value='/api/hello/json' />"><fmt:message key="jsp.index.hello.resource.json" /></a></p>
         <p><a href="<c:url value='/servlet/error' />"><fmt:message key="jsp.index.error" /></a></p>

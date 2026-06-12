@@ -90,7 +90,9 @@ dependencies {
 	mockitoAgent 		(libs.org.mockito.mockito.core)
 
 	testRuntimeOnly		(libs.ch.qos.logback.logback.classic)
+	testRuntimeOnly		(libs.org.glassfish.expressly.expressly)
 	testRuntimeOnly		(libs.org.glassfish.jersey.core.jersey.common)
+	testRuntimeOnly		(libs.org.hibernate.validator.hibernate.validator)
 	testRuntimeOnly		('org.junit.platform:junit-platform-launcher')
 }
 

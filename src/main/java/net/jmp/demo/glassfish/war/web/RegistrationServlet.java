@@ -1,6 +1,7 @@
 package net.jmp.demo.glassfish.war.web;
 
 /*
+ * (#)RegistrationServlet.java  0.2.0   06/12/2026
  * (#)RegistrationServlet.java  0.1.0   06/04/2026
  *
  * @author   Jonathan Parker
@@ -39,22 +40,27 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+
 import java.io.IOException;
 
 import java.io.UnsupportedEncodingException;
 
 import java.text.MessageFormat;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
+
+import net.jmp.demo.glassfish.war.dto.RegistrationData;
 
 import net.jmp.demo.glassfish.war.util.StringUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.jspecify.annotations.Nullable;
 
 import static net.jmp.util.logging.LoggerUtils.*;
 
@@ -66,6 +72,9 @@ public class RegistrationServlet extends HttpServlet {
 
     /// The messages resource bundle
     private final transient ResourceBundle bundle;
+
+    /// The input validator
+    private final transient Validator validator;
 
     /// The registration form JSP
     private static final String REGISTER_JSP = "/WEB-INF/jsp/register.jsp";
@@ -81,6 +90,10 @@ public class RegistrationServlet extends HttpServlet {
         super();
 
         this.bundle = bundle;
+
+        try (final ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            this.validator = factory.getValidator();
+        }
     }
 
     /// The GET method. Called from /servlet/register.
@@ -123,16 +136,21 @@ public class RegistrationServlet extends HttpServlet {
 
         final String email = StringUtils.trimToNull(request.getParameter("email"));
 
+        final RegistrationData registrationData = new RegistrationData(email);
+        final Set<ConstraintViolation<RegistrationData>> violations = this.validator.validate(registrationData);
+
         request.setAttribute("email", email);
 
-        final List<String> errors = this.validateInput(email);
-
-        if (errors.isEmpty()) {
+        if (violations.isEmpty()) {
             final String pattern = this.bundle.getString("servlet.registration.success");
             final String successMessage = MessageFormat.format(pattern, email);
 
             request.setAttribute("successMessage", successMessage);
         } else {
+            final List<String> errors = violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .toList();
+
             request.setAttribute("errors", errors);
         }
 
@@ -141,29 +159,5 @@ public class RegistrationServlet extends HttpServlet {
         if (this.logger.isTraceEnabled()) {
             this.logger.trace(exit());
         }
-    }
-
-    /// The validate input method
-    ///
-    /// @param  email   java.lang.String
-    /// @return         java.util.List<java.lang.String>
-    private List<String> validateInput(final @Nullable String email) {
-        if (this.logger.isTraceEnabled()) {
-            this.logger.trace(entryWith(email));
-        }
-
-        final List<String> errors = new ArrayList<>();
-
-        if (email == null) {
-            errors.add(this.bundle.getString("servlet.registration.validation.required.email"));
-        } else if (!StringUtils.looksLikeEmail(email)) {
-            errors.add(this.bundle.getString("servlet.registration.validation.email"));
-        }
-
-        if (this.logger.isTraceEnabled()) {
-            this.logger.trace(exitWith(errors));
-        }
-
-        return errors;
     }
 }

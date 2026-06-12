@@ -1,6 +1,7 @@
 package net.jmp.demo.glassfish.war.web;
 
 /*
+ * (#)FormServlet.java  0.2.0   06/12/2026
  * (#)FormServlet.java  0.1.0   06/03/2026
  *
  * @author   Jonathan Parker
@@ -39,20 +40,25 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+
 import java.io.IOException;
 
 import java.io.UnsupportedEncodingException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
+
+import net.jmp.demo.glassfish.war.dto.FormData;
 
 import net.jmp.demo.glassfish.war.util.StringUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.jspecify.annotations.Nullable;
 
 import static net.jmp.util.logging.LoggerUtils.*;
 
@@ -65,6 +71,9 @@ public class FormServlet extends HttpServlet {
     /// The messages resource bundle
     private final transient ResourceBundle bundle;
 
+    /// The input validator
+    private final transient Validator validator;
+
     /// The form JSP
     private static final String FORM_JSP = "/WEB-INF/jsp/form.jsp";
 
@@ -76,6 +85,10 @@ public class FormServlet extends HttpServlet {
         super();
 
         this.bundle = bundle;
+
+        try (final ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            this.validator = factory.getValidator();
+        }
     }
 
     /// The GET method. Called from /servlet/form.
@@ -120,15 +133,20 @@ public class FormServlet extends HttpServlet {
         final String email = StringUtils.trimToNull(request.getParameter("email"));
         final String comment = StringUtils.trimToNull(request.getParameter("comment"));
 
+        final FormData formData = new FormData(name, email, comment);
+        final Set<ConstraintViolation<FormData>> violations = this.validator.validate(formData);
+
         request.setAttribute("name", name);
         request.setAttribute("email", email);
         request.setAttribute("comment", comment);
 
-        final List<String> errors = this.validateInput(name, email, comment);
-
-        if (errors.isEmpty()) {
+        if (violations.isEmpty()) {
             request.setAttribute("successMessage", this.bundle.getString("servlet.form.success"));
         } else {
+            final List<String> errors = violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .toList();
+
             request.setAttribute("errors", errors);
         }
 
@@ -137,44 +155,5 @@ public class FormServlet extends HttpServlet {
         if (this.logger.isTraceEnabled()) {
             this.logger.trace(exit());
         }
-    }
-
-    /// The validate input method
-    ///
-    /// @param  name        java.lang.String
-    /// @param  email       java.lang.String
-    /// @param  comment     java.lang.String
-    /// @return             java.util.List<java.lang.String>
-    private List<String> validateInput(
-            final @Nullable String name,
-            final @Nullable String email,
-            final @Nullable String comment) {
-        if (this.logger.isTraceEnabled()) {
-            this.logger.trace(entryWith(name, email, comment));
-        }
-
-        final List<String> errors = new ArrayList<>();
-
-        if (name == null) {
-            errors.add(this.bundle.getString("servlet.form.validation.required.name"));
-        }
-
-        if (email == null) {
-            errors.add(this.bundle.getString("servlet.form.validation.required.email"));
-        } else if (!StringUtils.looksLikeEmail(email)) {
-            errors.add(this.bundle.getString("servlet.form.validation.email"));
-        }
-
-        if (comment == null) {
-            errors.add(this.bundle.getString("servlet.form.validation.required.comment"));
-        } else if (comment.length() < 10) {
-            errors.add(this.bundle.getString("servlet.form.validation.comment"));
-        }
-
-        if (this.logger.isTraceEnabled()) {
-            this.logger.trace(exitWith(errors));
-        }
-
-        return errors;
     }
 }

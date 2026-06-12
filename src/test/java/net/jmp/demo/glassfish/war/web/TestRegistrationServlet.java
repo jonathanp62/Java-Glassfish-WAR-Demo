@@ -47,8 +47,8 @@ import org.mockito.ArgumentCaptor;
 
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static org.mockito.ArgumentMatchers.any;
 
@@ -116,7 +116,6 @@ class TestRegistrationServlet {
         @SuppressWarnings("rawtypes")
         final ArgumentCaptor<List> errorsCaptor = ArgumentCaptor.forClass(List.class);
 
-        when(bundle.getString("servlet.registration.validation.required.email")).thenReturn("Email is required");
         when(request.getParameter("email")).thenReturn(" ");
         when(request.getRequestDispatcher(REGISTERED_JSP)).thenReturn(dispatcher);
 
@@ -141,7 +140,6 @@ class TestRegistrationServlet {
         @SuppressWarnings("rawtypes")
         final ArgumentCaptor<List> errorsCaptor = ArgumentCaptor.forClass(List.class);
 
-        when(bundle.getString("servlet.registration.validation.email")).thenReturn("Email is invalid");
         when(request.getParameter("email")).thenReturn("jonathan");
         when(request.getRequestDispatcher(REGISTERED_JSP)).thenReturn(dispatcher);
 
@@ -153,7 +151,11 @@ class TestRegistrationServlet {
         verify(request, never()).setAttribute(eq("successMessage"), any());
         verify(dispatcher).forward(request, response);
 
-        assertEquals(List.of("Email is invalid"), errorsCaptor.getValue());
+        @SuppressWarnings("unchecked")
+        final List<String> errors = errorsCaptor.getValue();    // Errors set by bean validation
+
+        assertEquals(1, errors.size());
+        assertTrue(errors.contains("Email must be a valid email address"));
     }
 
     @Test

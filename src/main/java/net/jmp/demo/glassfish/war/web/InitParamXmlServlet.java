@@ -1,6 +1,7 @@
 package net.jmp.demo.glassfish.war.web;
 
 /*
+ * (#)InitParamXmlServlet.java  0.2.0   06/15/2026
  * (#)InitParamXmlServlet.java  0.1.0   06/11/2026
  *
  * @author   Jonathan Parker
@@ -28,7 +29,12 @@ package net.jmp.demo.glassfish.war.web;
  * SOFTWARE.
  */
 
+import jakarta.annotation.security.DeclareRoles;
+
 import jakarta.servlet.ServletException;
+
+import jakarta.servlet.annotation.HttpConstraint;
+import jakarta.servlet.annotation.ServletSecurity;
 
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,6 +50,8 @@ import org.slf4j.LoggerFactory;
 import static net.jmp.util.logging.LoggerUtils.*;
 
 /// The init parameters servlet class
+@DeclareRoles("user")
+@ServletSecurity(@HttpConstraint(rolesAllowed = "user"))
 public class InitParamXmlServlet extends HttpServlet {
     // Initialize the SLF4J Logger
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());

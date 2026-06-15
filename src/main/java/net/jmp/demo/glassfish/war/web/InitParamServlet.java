@@ -50,6 +50,12 @@ import org.slf4j.LoggerFactory;
 import static net.jmp.util.logging.LoggerUtils.*;
 
 /// The init parameters servlet class
+///
+/// Found a way to test the security configuration
+/// Using Safari, open a private window and navigate to a servlet
+/// Once the authentication has been made, close the private window,
+/// open a new one, then navigate to the same or a different servlet
+///
 @WebServlet(
     urlPatterns = "/servlet/init-param",
     initParams = {

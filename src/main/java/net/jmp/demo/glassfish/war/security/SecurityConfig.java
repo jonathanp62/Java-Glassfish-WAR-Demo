@@ -35,6 +35,12 @@ import jakarta.security.enterprise.authentication.mechanism.http.BasicAuthentica
 import jakarta.security.enterprise.identitystore.InMemoryIdentityStoreDefinition;
 
 /// The application security configuration class
+///
+/// Found a way to test the security configuration
+/// Using Safari, open a private window and navigate to a servlet
+/// Once the authentication has been made, close the private window,
+/// open a new one, then navigate to the same or a different servlet
+///
 @BasicAuthenticationMechanismDefinition(realmName = "demo-realm")
 @InMemoryIdentityStoreDefinition({
         @InMemoryIdentityStoreDefinition.Credentials(

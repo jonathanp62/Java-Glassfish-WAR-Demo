@@ -114,7 +114,7 @@ tasks.compileJava {
 tasks.register('deploy', Copy) {
 	dependsOn build			// Forces a fresh build before deploying
 	from war.archiveFile	// Path to your local built WAR file
-	into '/usr/local/glassfish8/glassfish/domains/domain1/autodeploy'
+	into '/opt/glassfish/glassfish8/glassfish/domains/jonathan/autodeploy'
 }
 
 tasks.withType(Javadoc).configureEach {

@@ -37,5 +37,10 @@
 
 <glassfish-web-app>
     <context-root>/glassfish-war-demo/0.2.0</context-root>
+
+    <session-config>
+        <session-manager persistence-type="memory" /> <!-- Not sure how to disable or clear -->
+    </session-config>
+
     <class-loader delegate="false"/>    <!-- Disable class loader delegation so that Logback logging is preferred for the WAR -->
 </glassfish-web-app>

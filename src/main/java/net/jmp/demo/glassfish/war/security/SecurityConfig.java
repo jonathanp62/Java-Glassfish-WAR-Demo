@@ -1,11 +1,9 @@
-package net.jmp.demo.glassfish.war.dto;
+package net.jmp.demo.glassfish.war.security;
 
 /*
- * (#)RegistrationData.java 0.2.0   06/12/2026
+ * (#)SecurityConfig.java   0.2.0   06/15/2026
  *
  * @author   Jonathan Parker
- * @version  0.2.0
- * @since    0.2.0
  *
  * MIT License
  *
@@ -30,31 +28,21 @@ package net.jmp.demo.glassfish.war.dto;
  * SOFTWARE.
  */
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.enterprise.context.ApplicationScoped;
 
-import org.jspecify.annotations.Nullable;
+import jakarta.security.enterprise.authentication.mechanism.http.BasicAuthenticationMechanismDefinition;
 
-/// The registration form data class
-public class RegistrationData {
-    /// The email address
-    @NotBlank(message = "{servlet.form.validation.required.email}")
-    @Email(message = "{servlet.form.validation.email}")
-    private final @Nullable String email;
+import jakarta.security.enterprise.identitystore.InMemoryIdentityStoreDefinition;
 
-    /// The constructor
-    ///
-    /// @param  email   java.lang.String
-    public RegistrationData(final @Nullable String email) {
-        super();
-
-        this.email = email;
-    }
-
-    /// The get email method
-    ///
-    /// @return java.lang.String
-    public @Nullable String getEmail() {
-        return this.email;
-    }
+/// The application security configuration class
+@BasicAuthenticationMechanismDefinition(realmName = "demo-realm")
+@InMemoryIdentityStoreDefinition({
+        @InMemoryIdentityStoreDefinition.Credentials(
+                callerName = "jonathan",
+                password = "secret",
+                groups = {"user"}
+        )
+})
+@ApplicationScoped
+public class SecurityConfig {
 }

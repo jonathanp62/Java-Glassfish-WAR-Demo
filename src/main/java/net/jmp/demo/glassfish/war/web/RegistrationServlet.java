@@ -29,11 +29,15 @@ package net.jmp.demo.glassfish.war.web;
  * SOFTWARE.
  */
 
+import jakarta.annotation.security.DeclareRoles;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import jakarta.servlet.ServletException;
 
+import jakarta.servlet.annotation.HttpConstraint;
+import jakarta.servlet.annotation.ServletSecurity;
 import jakarta.servlet.annotation.WebServlet;
 
 import jakarta.servlet.http.HttpServlet;
@@ -66,6 +70,8 @@ import static net.jmp.util.logging.LoggerUtils.*;
 
 /// The registration servlet class
 @WebServlet(urlPatterns = "/servlet/register")
+@DeclareRoles("user")
+@ServletSecurity(@HttpConstraint(rolesAllowed = "user"))
 public class RegistrationServlet extends HttpServlet {
     // Initialize the SLF4J Logger
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());

@@ -1,6 +1,7 @@
 package net.jmp.demo.glassfish.war.web;
 
 /*
+ * (#)ErrorServlet.java 0.2.0   06/15/2026
  * (#)ErrorServlet.java 0.1.0   06/06/2026
  *
  * @author   Jonathan Parker
@@ -28,11 +29,15 @@ package net.jmp.demo.glassfish.war.web;
  * SOFTWARE.
  */
 
+import jakarta.annotation.security.DeclareRoles;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import jakarta.servlet.ServletException;
 
+import jakarta.servlet.annotation.HttpConstraint;
+import jakarta.servlet.annotation.ServletSecurity;
 import jakarta.servlet.annotation.WebServlet;
 
 import jakarta.servlet.http.HttpServlet;
@@ -45,6 +50,8 @@ import java.util.ResourceBundle;
 
 /// The error servlet class. Used to drive the 500 error JSP.
 @WebServlet(urlPatterns = "/servlet/error")
+@DeclareRoles("user")
+@ServletSecurity(@HttpConstraint(rolesAllowed = "user"))
 public class ErrorServlet extends HttpServlet {
     /// The messages resource bundle
     private final transient ResourceBundle bundle;

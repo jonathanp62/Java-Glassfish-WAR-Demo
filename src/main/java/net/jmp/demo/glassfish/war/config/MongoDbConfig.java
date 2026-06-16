@@ -45,48 +45,64 @@ import jakarta.enterprise.event.Observes;
 
 import jakarta.enterprise.inject.Produces;
 
+import org.jspecify.annotations.Nullable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.logging.Level;
 
 /// The configuration class for MongoDB
 @ApplicationScoped
 public class MongoDbConfig {
     /// The JNDI lookup for the MongoDB connection string
     @Resource(lookup = "jndi/mongoURI")
+    @SuppressWarnings("NullAway")
     private String mongoConnectionUri;
 
     /// The MongoDB client
-    private MongoClient mongoClient;
+    private @Nullable MongoClient mongoClient;
 
     // Initialize the SLF4J Logger
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final java.util.logging.Logger JUL_LOGGER = java.util.logging.Logger.getLogger(MongoDbConfig.class.getName());
-
+    /// The observer method for the application startup event
+    ///
+    /// @param  event   java.lang.Object
     void onStartup(@Observes @Initialized(ApplicationScoped.class) final Object event) {
-        JUL_LOGGER.log(Level.INFO, "MongoDbConfig starting");
+        this.logger.info("MongoDB configuration started");
     }
 
+    /// The post-construct method for the application startup event.
+    /// It runs after the dependency injection has been completed.
     @PostConstruct
     void init() {
         this.mongoClient = MongoClients.create(this.mongoConnectionUri);
-        this.mongoClient.getDatabase("admin").runCommand(new Document("ping", 1));
-        this.logger.info("MongoDB pinged OK");
-        JUL_LOGGER.log(Level.INFO, "MongoDB pinged OK");
+
+        this.logger.info("MongoDB client created");
+
+        try {
+            this.mongoClient.getDatabase("admin").runCommand(new Document("ping", 1));
+            this.logger.info("MongoDB pinged OK");
+        } catch (final Exception e) {
+            this.logger.warn("MongoDB ping failed: {}", e.getMessage());
+        }
     }
 
+    /// The pre-destroy method for the application shutdown event.
+    /// Releases the MongoDB client when the application is shutting down.
     @PreDestroy
     void destroy() {
         if (this.mongoClient != null) {
             this.mongoClient.close();
+            this.logger.info("MongoDB client closed");
         }
     }
 
+    /// The producer method for the MongoDB client
+    ///
+    /// @return com.mongodb.client.MongoClient
     @Produces
     @ApplicationScoped
-    public MongoClient getMongoClient() {
+    public @Nullable MongoClient getMongoClient() {
         return this.mongoClient;
     }
 
@@ -96,6 +112,9 @@ public class MongoDbConfig {
     @Produces
     @ApplicationScoped
     public MongoDatabase getDatabase() {
+        if (this.mongoClient == null) {
+            throw new NullPointerException("MongoClient is null");
+        }
         return this.mongoClient.getDatabase("react_learning");
     }
 }

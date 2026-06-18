@@ -78,6 +78,18 @@ public class ProjectsServlet extends HttpServlet {
     @SuppressWarnings("NullAway")
     private @Nullable DataSource dataSource;
 
+    /// Default constructor
+    ProjectsServlet() {
+        super();
+    }
+
+    /// Constructor for testing
+    ///
+    /// @param dataSource javax.sql.DataSource
+    ProjectsServlet(final DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     /// The GET method. Called from /api/projects.
     ///
     /// @param  request     jakarta.servlet.http.HttpServletRequest

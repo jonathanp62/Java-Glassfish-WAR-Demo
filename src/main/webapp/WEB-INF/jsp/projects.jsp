@@ -53,10 +53,10 @@
             <tbody>
                 <c:forEach var="p" items="${requestScope.projects}">
                     <tr>
-                        <td style="text-align: right;"><c:out value="${p.projectId}" /></td>
-                        <td><c:out value="${p.projectName}" /></td>
-                        <td><c:out value="${p.status}" /></td>
-                        <td><fmt:formatDate value="${p.createdAt}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+                        <td style="text-align: center;"><c:out value="${p.projectId}" /></td>
+                        <td style="text-align: center;"><a href="<c:url value='/users'><c:param name='projectId' value='${p.projectId}' /></c:url>"><c:out value="${p.projectName}" /></a></td>
+                        <td style="text-align: center;"><c:out value="${p.status}" /></td>
+                        <td style="text-align: center;"><fmt:formatDate value="${p.createdAt}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
                     </tr>
                 </c:forEach>
             </tbody>

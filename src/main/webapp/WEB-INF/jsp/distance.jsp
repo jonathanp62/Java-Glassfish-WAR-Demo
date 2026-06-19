@@ -55,10 +55,10 @@
             <tbody>
                 <c:forEach var="d" items="${requestScope.distances}">
                     <tr>
-                        <td><c:out value="${d.fromZipCode}" /></td>
-                        <td><c:out value="${d.toZipCode}" /></td>
-                        <td><c:out value="${d.toCity}" /></td>
-                        <td><c:out value="${d.toState}" /></td>
+                        <td style="text-align: center;"><c:out value="${d.fromZipCode}" /></td>
+                        <td style="text-align: center;"><c:out value="${d.toZipCode}" /></td>
+                        <td style="text-align: center;"><c:out value="${d.toCity}" /></td>
+                        <td style="text-align: center;"><c:out value="${d.toState}" /></td>
                         <td style="text-align: right;"><fmt:formatNumber value="${d.distanceInMiles}" type="number" minFractionDigits="3" maxFractionDigits="3" /></td>
                         <td style="text-align: right;"><fmt:formatNumber value="${d.distanceInKilometers}" type="number" minFractionDigits="3" maxFractionDigits="3" /></td>
                     </tr>

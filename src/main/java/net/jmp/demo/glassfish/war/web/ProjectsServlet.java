@@ -30,8 +30,12 @@ package net.jmp.demo.glassfish.war.web;
 
 import jakarta.annotation.Resource;
 
+import jakarta.annotation.security.DeclareRoles;
+
 import jakarta.servlet.ServletException;
 
+import jakarta.servlet.annotation.HttpConstraint;
+import jakarta.servlet.annotation.ServletSecurity;
 import jakarta.servlet.annotation.WebServlet;
 
 import jakarta.servlet.http.HttpServlet;
@@ -62,6 +66,8 @@ import static net.jmp.util.logging.LoggerUtils.*;
 
 /// The projects servlet class
 @WebServlet(urlPatterns = "/servlet/projects")
+@DeclareRoles("user")
+@ServletSecurity(@HttpConstraint(rolesAllowed = "user"))
 public class ProjectsServlet extends HttpServlet {
     /// The serial version UID
     @Serial

@@ -44,6 +44,7 @@ org-mockito-mockito-core = "5.23.0"
 org-mockito-mockito-junit-jupiter = "5.23.0"
 org-mongodb-mongodb-driver-sync = "5.8.0"
 org-slf4j-slf4j-api = "2.0.18"
+org-xerial-sqlite-jdbc = "3.53.2.0"
 
 [libraries]
 ch-qos-logback-logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "ch-qos-logback-logback-classic" }
@@ -61,6 +62,7 @@ org-mockito-mockito-core = { module = "org.mockito:mockito-core", version.ref = 
 org-mockito-mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "org-mockito-mockito-junit-jupiter" }
 org-mongodb-mongodb-driver-sync = { module = "org.mongodb:mongodb-driver-sync", version.ref = "org-mongodb-mongodb-driver-sync" }
 org-slf4j-slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "org-slf4j-slf4j-api" }
+org-xerial-sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "org-xerial-sqlite-jdbc" }
 
 [bundles]
 jakarta = [

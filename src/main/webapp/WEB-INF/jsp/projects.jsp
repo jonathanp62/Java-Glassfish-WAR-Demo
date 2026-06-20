@@ -1,5 +1,5 @@
 <%--
- (#)distance.jsp    0.2.0   06/17/2026
+ (#)projects.jsp    0.2.0   06/18/2026
 
  @author   Jonathan Parker
  @version  0.2.0
@@ -35,37 +35,33 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title><fmt:message key="jsp.distance.title" /></title>
+        <title><fmt:message key="jsp.projects.title" /></title>
         <link rel="stylesheet" href="<c:url value='/static/css/styles.css' />" />
     </head>
     <body>
-        <h2><fmt:message key="jsp.distance.title" /></h2>
+        <h2><fmt:message key="jsp.projects.title" /></h2>
 
         <table>
             <thead>
                 <tr>
-                    <th><fmt:message key="jsp.distance.fromZipCode" /></th>
-                    <th><fmt:message key="jsp.distance.toZipCode" /></th>
-                    <th><fmt:message key="jsp.distance.toCity" /></th>
-                    <th><fmt:message key="jsp.distance.toState" /></th>
-                    <th><fmt:message key="jsp.distance.distanceInMiles" /></th>
-                    <th><fmt:message key="jsp.distance.distanceInKilometers" /></th>
+                    <th><fmt:message key="jsp.projects.projectId" /></th>
+                    <th><fmt:message key="jsp.projects.projectName" /></th>
+                    <th><fmt:message key="jsp.projects.status" /></th>
+                    <th><fmt:message key="jsp.projects.createdAt" /></th>
                 </tr>
             </thead>
             <tbody>
-                <c:forEach var="d" items="${requestScope.distances}">
+                <c:forEach var="p" items="${requestScope.projects}">
                     <tr>
-                        <td style="text-align: center;"><c:out value="${d.fromZipCode}" /></td>
-                        <td style="text-align: center;"><c:out value="${d.toZipCode}" /></td>
-                        <td style="text-align: center;"><c:out value="${d.toCity}" /></td>
-                        <td style="text-align: center;"><c:out value="${d.toState}" /></td>
-                        <td style="text-align: right;"><fmt:formatNumber value="${d.distanceInMiles}" type="number" minFractionDigits="3" maxFractionDigits="3" /></td>
-                        <td style="text-align: right;"><fmt:formatNumber value="${d.distanceInKilometers}" type="number" minFractionDigits="3" maxFractionDigits="3" /></td>
+                        <td style="text-align: center;"><c:out value="${p.projectId}" /></td>
+                        <td style="text-align: center;"><a href="<c:url value='/users'><c:param name='projectId' value='${p.projectId}' /></c:url>"><c:out value="${p.projectName}" /></a></td>
+                        <td style="text-align: center;"><c:out value="${p.status}" /></td>
+                        <td style="text-align: center;"><fmt:formatDate value="${p.createdAt}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
                     </tr>
                 </c:forEach>
             </tbody>
         </table>
 
-        <h3><a href="<c:url value='/' />"><fmt:message key="jsp.distance.home" /></a></h3>
+        <h3><a href="<c:url value='/' />"><fmt:message key="jsp.projects.home" /></a></h3>
     </body>
 </html>

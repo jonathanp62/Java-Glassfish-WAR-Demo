@@ -77,6 +77,7 @@ dependencies {
 	compileOnly 		(libs.bundles.jakarta)
 	compileOnly 		(libs.org.glassfish.web.jakarta.servlet.jsp.jstl)
 	compileOnly 		(libs.org.jspecify.jspecify)
+	compileOnly 		(libs.org.xerial.sqlite.jdbc)
 
 	implementation 		(libs.bundles.logging)
 	implementation 		(libs.org.mongodb.mongodb.driver.sync)

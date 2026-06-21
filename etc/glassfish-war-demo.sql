@@ -35,3 +35,26 @@ VALUES
     ('Bob', 'Jones', 'bob.jones@example.com', 32, 'backend', 1),
     ('Charlie', 'Brown', 'charlie.brown@example.com', 24, 'frontend', 2),
     ('Diana', 'Prince', 'diana.prince@example.com', 30, 'devops', 2);
+
+-- 5. Create the cars table
+CREATE TABLE cars (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    year INTEGER,
+    make TEXT,
+    model TEXT,
+    color TEXT,
+    style TEXT
+);
+
+-- 6. Insert the car rows
+INSERT INTO cars (year, make, model, color, style) VALUES
+(1980, 'Dodge', 'Omni', 'Red', 'Four door hatchback'),
+(1986, 'Plymouth', 'Sundance', 'Silver', 'Two door coupe'),
+(1994, 'Ford', 'Escort GT', 'Black', 'Two door hatchback'),
+(2000, 'Oldsmobile', 'Alero', 'Green', 'Four door sedan'),
+(2006, 'Honda', 'Civic', 'Black', 'Two door coupe'),
+(2011, 'Hyundai', 'Elantra', 'Tan', 'Four door sedan'),
+(2012, 'Hyundai', 'Veloster', 'Red', 'Three door hatchback'),
+(2015, 'Hyundai', 'Sonata', 'Unknown', 'Four door sedan'),
+(2019, 'Volvo', 'S60', 'Red', 'Four door sedan'),
+(2026, 'Honda', 'Civic Sport Touring', 'Boost Blue', 'Four door hatchback');

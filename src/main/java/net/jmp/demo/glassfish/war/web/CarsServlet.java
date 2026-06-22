@@ -1,7 +1,7 @@
 package net.jmp.demo.glassfish.war.web;
 
 /*
- * (#)ProjectsServlet.java 0.2.0   06/18/2026
+ * (#)CarsServlet.java  0.2.0   06/22/2026
  *
  * @author   Jonathan Parker
  *
@@ -28,9 +28,9 @@ package net.jmp.demo.glassfish.war.web;
  * SOFTWARE.
  */
 
-import jakarta.annotation.Resource;
-
 import jakarta.annotation.security.DeclareRoles;
+
+import jakarta.ejb.EJB;
 
 import jakarta.servlet.ServletException;
 
@@ -45,58 +45,49 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serial;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.sql.DataSource;
-
-import net.jmp.demo.glassfish.war.dto.Project;
-
-import org.jspecify.annotations.Nullable;
+import net.jmp.demo.glassfish.war.service.CarService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static net.jmp.util.logging.LoggerUtils.*;
+import static net.jmp.util.logging.LoggerUtils.entryWith;
+import static net.jmp.util.logging.LoggerUtils.exit;
 
 /// The projects servlet class
-@WebServlet(urlPatterns = "/servlet/projects")
+@WebServlet(urlPatterns = "/servlet/cars")
 @DeclareRoles("user")
 @ServletSecurity(@HttpConstraint(rolesAllowed = "user"))
-public class ProjectsServlet extends HttpServlet {
+public class CarsServlet extends HttpServlet {
     /// The serial version UID
     @Serial
     private static final long serialVersionUID = 1L;
 
-    /// The projects JSP
-    private static final String PROJECTS_JSP = "/WEB-INF/jsp/projects.jsp";
+    /// The cars JSP
+    private static final String CARS_JSP = "/WEB-INF/jsp/cars.jsp";
 
     // Initialize the SLF4J Logger
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /// The SQLite data source
-    @Resource(lookup = "jdbc/sqlite")
+    /// The car service
+    @EJB
     @SuppressWarnings("NullAway")
-    private @Nullable DataSource dataSource;
+    private transient CarService carService;
 
     /// Default constructor
-    ProjectsServlet() {
+    /// It is required by Glassfish since
+    /// there is a parameterized constructor.
+    public CarsServlet() {
         super();
     }
 
     /// Constructor for testing
     ///
-    /// @param dataSource javax.sql.DataSource
-    ProjectsServlet(final DataSource dataSource) {
-        this.dataSource = dataSource;
+    /// @param  carService  net.jmp.demo.glassfish.war.service.CarService
+    CarsServlet(final CarService carService) {
+        this.carService = carService;
     }
 
-    /// The GET method. Called from /servlet/projects.
+    /// The GET method. Called from /servlet/cars.
     ///
     /// @param  request     jakarta.servlet.http.HttpServletRequest
     /// @param  response    jakarta.servlet.http.HttpServletResponse
@@ -108,56 +99,11 @@ public class ProjectsServlet extends HttpServlet {
             this.logger.trace(entryWith(request, response));
         }
 
-        request.setAttribute("projects", this.readProjects());
-        request.getRequestDispatcher(PROJECTS_JSP).forward(request, response);
+        request.setAttribute("cars", this.carService.getAll());
+        request.getRequestDispatcher(CARS_JSP).forward(request, response);
 
         if (this.logger.isTraceEnabled()) {
             this.logger.trace(exit());
         }
-    }
-
-    /// Read all projects from the SQLite database
-    ///
-    /// @return java.util.List
-    private List<Project> readProjects() {
-        if (this.logger.isTraceEnabled()) {
-            this.logger.trace(entry());
-        }
-
-        final List<Project> projects = new ArrayList<>();
-        final String sql = "SELECT project_id, project_name, status, created_at FROM projects";
-
-        if (this.dataSource == null) {
-            this.logger.error("DataSource is null");
-            return projects;
-        }
-
-        try (final Connection connection = this.dataSource.getConnection();
-             final PreparedStatement statement = connection.prepareStatement(sql);
-             final ResultSet resultSet = statement.executeQuery()) {
-
-            while (resultSet.next()) {
-                final Project project = new Project();
-
-                project.setProjectId(resultSet.getInt("project_id"));
-                project.setProjectName(resultSet.getString("project_name"));
-                project.setStatus(resultSet.getString("status"));
-                project.setCreatedAt(resultSet.getTimestamp("created_at"));
-
-                projects.add(project);
-            }
-        } catch (final SQLException e) {
-            this.logger.error("Error reading projects from database", e);
-        }
-
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Read {} projects", projects.size());
-        }
-
-        if (this.logger.isTraceEnabled()) {
-            this.logger.trace(exitWith(projects));
-        }
-
-        return projects;
     }
 }

@@ -43,6 +43,7 @@
         <h2><fmt:message key="jsp.index.title" /></h2>
         <h3><fmt:message key="jsp.index.hello" /></h3>
         <h3><fmt:message key="word.version" /> ${initParam.appVersion}</h3>
+        <p><a href="<c:url value='/servlet/cars' />"><fmt:message key="jsp.index.cars" /></a></p>
         <p><a href="<c:url value='/servlet/error' />"><fmt:message key="jsp.index.error" /></a></p>
         <p><a href="<c:url value='/servlet/distance' />"><fmt:message key="jsp.index.distance" /></a></p>
         <p><a href="<c:url value='/servlet/form' />"><fmt:message key="jsp.index.form.demo" /></a></p>

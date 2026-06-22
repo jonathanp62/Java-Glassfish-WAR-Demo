@@ -96,7 +96,7 @@ public class ProjectsServlet extends HttpServlet {
         this.dataSource = dataSource;
     }
 
-    /// The GET method. Called from /api/projects.
+    /// The GET method. Called from /servlet/projects.
     ///
     /// @param  request     jakarta.servlet.http.HttpServletRequest
     /// @param  response    jakarta.servlet.http.HttpServletResponse

@@ -73,6 +73,20 @@ public class CarsServlet extends HttpServlet {
     @SuppressWarnings("NullAway")
     private transient CarService carService;
 
+    /// Default constructor
+    /// It is required by Glassfish since
+    /// there is a parameterized constructor.
+    public CarsServlet() {
+        super();
+    }
+
+    /// Constructor for testing
+    ///
+    /// @param  carService  net.jmp.demo.glassfish.war.service.CarService
+    CarsServlet(final CarService carService) {
+        this.carService = carService;
+    }
+
     /// The GET method. Called from /servlet/cars.
     ///
     /// @param  request     jakarta.servlet.http.HttpServletRequest

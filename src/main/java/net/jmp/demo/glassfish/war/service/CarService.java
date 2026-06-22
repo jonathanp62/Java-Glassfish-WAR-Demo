@@ -56,6 +56,20 @@ public class CarService {
     // Initialize the SLF4J Logger
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /// Default constructor
+    /// It is required by Glassfish since
+    /// there is a parameterized constructor.
+    public CarService() {
+        super();
+    }
+
+    /// Constructor for testing
+    ///
+    /// @param  em  jakarta.persistence.EntityManager
+    CarService(final EntityManager em) {
+        this.em = em;
+    }
+
     /// Get all cars
     ///
     /// @return java.util.List<net.jmp.demo.glassfish.war.dto.Car>

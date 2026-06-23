@@ -72,6 +72,13 @@ public class UserService {
         super();
     }
 
+    /// Constructor for testing
+    ///
+    /// @param  dataSource  javax.sql.DataSource
+    UserService(final DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     /// Read all users for a project from the SQLite database
     ///
     /// @param  projectId   java.lang.Integer

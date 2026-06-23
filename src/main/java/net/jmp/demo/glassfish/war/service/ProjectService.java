@@ -72,6 +72,13 @@ public class ProjectService {
         super();
     }
 
+    /// Constructor for testing
+    ///
+    /// @param  dataSource  javax.sql.DataSource
+    ProjectService(final DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     /// Get all projects from the SQLite database
     ///
     /// @return java.util.List

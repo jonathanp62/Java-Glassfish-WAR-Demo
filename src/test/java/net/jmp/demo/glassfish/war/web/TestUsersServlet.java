@@ -34,17 +34,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import net.jmp.demo.glassfish.war.dto.User;
+
+import net.jmp.demo.glassfish.war.service.UserService;
 
 import org.junit.jupiter.api.Test;
 
@@ -66,32 +62,27 @@ class TestUsersServlet {
 
     @Test
     void testDoGetSetsProjectIdAndUsersAttributesAndForwardsToUsersJsp() throws Exception {
-        final DataSource dataSource = mock(DataSource.class);
-        final Connection connection = mock(Connection.class);
-        final PreparedStatement statement = mock(PreparedStatement.class);
-        final ResultSet resultSet = mock(ResultSet.class);
+        final UserService userService = mock(UserService.class);
         final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final RequestDispatcher dispatcher = mock(RequestDispatcher.class);
-
         final Timestamp createdAt = new Timestamp(System.currentTimeMillis());
+        final User user = new User();
+
+        user.setUserId(1);
+        user.setFirstName("Alice");
+        user.setLastName("Smith");
+        user.setEmail("alice.smith@example.com");
+        user.setAge(28);
+        user.setRole("lead");
+        user.setProjectId(1);
+        user.setCreatedAt(createdAt);
 
         when(request.getParameter("projectId")).thenReturn("1");
-        when(dataSource.getConnection()).thenReturn(connection);
-        when(connection.prepareStatement(anyString())).thenReturn(statement);
-        when(statement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(true, false);
-        when(resultSet.getInt("user_id")).thenReturn(1);
-        when(resultSet.getString("first_name")).thenReturn("Alice");
-        when(resultSet.getString("last_name")).thenReturn("Smith");
-        when(resultSet.getString("email")).thenReturn("alice.smith@example.com");
-        when(resultSet.getInt("age")).thenReturn(28);
-        when(resultSet.getString("role")).thenReturn("lead");
-        when(resultSet.getInt("project_id")).thenReturn(1);
-        when(resultSet.getTimestamp("created_at")).thenReturn(createdAt);
+        when(userService.getForProject(1)).thenReturn(List.of(user));
         when(request.getRequestDispatcher(USERS_JSP)).thenReturn(dispatcher);
 
-        final UsersServlet servlet = new UsersServlet(dataSource);
+        final UsersServlet servlet = new UsersServlet(userService);
 
         servlet.doGet(request, response);
 
@@ -109,36 +100,30 @@ class TestUsersServlet {
 
         assertEquals(1, users.size());
 
-        final User user = users.getFirst();
+        final User result = users.getFirst();
 
-        assertEquals(1, user.getUserId());
-        assertEquals("Alice", user.getFirstName());
-        assertEquals("Smith", user.getLastName());
-        assertEquals("alice.smith@example.com", user.getEmail());
-        assertEquals(28, user.getAge());
-        assertEquals("lead", user.getRole());
-        assertEquals(1, user.getProjectId());
-        assertEquals(createdAt, user.getCreatedAt());
+        assertEquals(1, result.getUserId());
+        assertEquals("Alice", result.getFirstName());
+        assertEquals("Smith", result.getLastName());
+        assertEquals("alice.smith@example.com", result.getEmail());
+        assertEquals(28, result.getAge());
+        assertEquals("lead", result.getRole());
+        assertEquals(1, result.getProjectId());
+        assertEquals(createdAt, result.getCreatedAt());
     }
 
     @Test
     void testDoGetWithEmptyResultSetSetsEmptyListAndForwardsToUsersJsp() throws Exception {
-        final DataSource dataSource = mock(DataSource.class);
-        final Connection connection = mock(Connection.class);
-        final PreparedStatement statement = mock(PreparedStatement.class);
-        final ResultSet resultSet = mock(ResultSet.class);
+        final UserService userService = mock(UserService.class);
         final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final RequestDispatcher dispatcher = mock(RequestDispatcher.class);
 
         when(request.getParameter("projectId")).thenReturn("1");
-        when(dataSource.getConnection()).thenReturn(connection);
-        when(connection.prepareStatement(anyString())).thenReturn(statement);
-        when(statement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(false);
+        when(userService.getForProject(1)).thenReturn(List.of());
         when(request.getRequestDispatcher(USERS_JSP)).thenReturn(dispatcher);
 
-        final UsersServlet servlet = new UsersServlet(dataSource);
+        final UsersServlet servlet = new UsersServlet(userService);
 
         servlet.doGet(request, response);
 
@@ -154,53 +139,29 @@ class TestUsersServlet {
     }
 
     @Test
-    void testDoGetWithNullDataSourceSetsEmptyListAndForwardsToUsersJsp() throws Exception {
+    void testDoGetWithNullUserServiceThrowsNullPointerException() {
         final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
-        final RequestDispatcher dispatcher = mock(RequestDispatcher.class);
 
         when(request.getParameter("projectId")).thenReturn("1");
-        when(request.getRequestDispatcher(USERS_JSP)).thenReturn(dispatcher);
 
         final UsersServlet servlet = new UsersServlet();
 
-        servlet.doGet(request, response);
-
-        verify(request).setAttribute("projectId", 1);
-
-        @SuppressWarnings("rawtypes")
-        final ArgumentCaptor<List> usersCaptor = ArgumentCaptor.forClass(List.class);
-
-        verify(request).setAttribute(eq("users"), usersCaptor.capture());
-        verify(dispatcher).forward(request, response);
-
-        assertTrue(usersCaptor.getValue().isEmpty());
+        assertThrows(NullPointerException.class, () -> servlet.doGet(request, response));
     }
 
     @Test
-    void testDoGetWithSQLExceptionSetsEmptyListAndForwardsToUsersJsp() throws Exception {
-        final DataSource dataSource = mock(DataSource.class);
+    void testDoGetWithServiceExceptionPropagatesRuntimeException() {
+        final UserService userService = mock(UserService.class);
         final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
-        final RequestDispatcher dispatcher = mock(RequestDispatcher.class);
 
         when(request.getParameter("projectId")).thenReturn("1");
-        when(dataSource.getConnection()).thenThrow(new SQLException("Connection failed"));
-        when(request.getRequestDispatcher(USERS_JSP)).thenReturn(dispatcher);
+        when(userService.getForProject(1)).thenThrow(new RuntimeException("Service failure"));
 
-        final UsersServlet servlet = new UsersServlet(dataSource);
+        final UsersServlet servlet = new UsersServlet(userService);
 
-        servlet.doGet(request, response);
-
-        verify(request).setAttribute("projectId", 1);
-
-        @SuppressWarnings("rawtypes")
-        final ArgumentCaptor<List> usersCaptor = ArgumentCaptor.forClass(List.class);
-
-        verify(request).setAttribute(eq("users"), usersCaptor.capture());
-        verify(dispatcher).forward(request, response);
-
-        assertTrue(usersCaptor.getValue().isEmpty());
+        assertThrows(RuntimeException.class, () -> servlet.doGet(request, response));
     }
 
     @Test

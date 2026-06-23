@@ -28,9 +28,9 @@ package net.jmp.demo.glassfish.war.web;
  * SOFTWARE.
  */
 
-import jakarta.annotation.Resource;
-
 import jakarta.annotation.security.DeclareRoles;
+
+import jakarta.ejb.EJB;
 
 import jakarta.servlet.ServletException;
 
@@ -45,19 +45,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serial;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.sql.DataSource;
-
-import net.jmp.demo.glassfish.war.dto.Project;
-
-import org.jspecify.annotations.Nullable;
+import net.jmp.demo.glassfish.war.service.ProjectService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,10 +67,10 @@ public class ProjectsServlet extends HttpServlet {
     // Initialize the SLF4J Logger
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /// The SQLite data source
-    @Resource(lookup = "jdbc/sqlite")
+    /// The project service
+    @EJB
     @SuppressWarnings("NullAway")
-    private @Nullable DataSource dataSource;
+    private transient ProjectService projectService;
 
     /// Default constructor
     ProjectsServlet() {
@@ -91,9 +79,9 @@ public class ProjectsServlet extends HttpServlet {
 
     /// Constructor for testing
     ///
-    /// @param dataSource javax.sql.DataSource
-    ProjectsServlet(final DataSource dataSource) {
-        this.dataSource = dataSource;
+    /// @param  projectService  net.jmp.demo.glassfish.war.service.ProjectService
+    ProjectsServlet(final ProjectService projectService) {
+        this.projectService = projectService;
     }
 
     /// The GET method. Called from /servlet/projects.
@@ -108,56 +96,11 @@ public class ProjectsServlet extends HttpServlet {
             this.logger.trace(entryWith(request, response));
         }
 
-        request.setAttribute("projects", this.readProjects());
+        request.setAttribute("projects", this.projectService.getAll());
         request.getRequestDispatcher(PROJECTS_JSP).forward(request, response);
 
         if (this.logger.isTraceEnabled()) {
             this.logger.trace(exit());
         }
-    }
-
-    /// Read all projects from the SQLite database
-    ///
-    /// @return java.util.List
-    private List<Project> readProjects() {
-        if (this.logger.isTraceEnabled()) {
-            this.logger.trace(entry());
-        }
-
-        final List<Project> projects = new ArrayList<>();
-        final String sql = "SELECT project_id, project_name, status, created_at FROM projects";
-
-        if (this.dataSource == null) {
-            this.logger.error("DataSource is null");
-            return projects;
-        }
-
-        try (final Connection connection = this.dataSource.getConnection();
-             final PreparedStatement statement = connection.prepareStatement(sql);
-             final ResultSet resultSet = statement.executeQuery()) {
-
-            while (resultSet.next()) {
-                final Project project = new Project();
-
-                project.setProjectId(resultSet.getInt("project_id"));
-                project.setProjectName(resultSet.getString("project_name"));
-                project.setStatus(resultSet.getString("status"));
-                project.setCreatedAt(resultSet.getTimestamp("created_at"));
-
-                projects.add(project);
-            }
-        } catch (final SQLException e) {
-            this.logger.error("Error reading projects from database", e);
-        }
-
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Read {} projects", projects.size());
-        }
-
-        if (this.logger.isTraceEnabled()) {
-            this.logger.trace(exitWith(projects));
-        }
-
-        return projects;
     }
 }

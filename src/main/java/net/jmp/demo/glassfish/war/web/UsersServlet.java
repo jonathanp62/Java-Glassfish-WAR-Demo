@@ -28,9 +28,9 @@ package net.jmp.demo.glassfish.war.web;
  * SOFTWARE.
  */
 
-import jakarta.annotation.Resource;
-
 import jakarta.annotation.security.DeclareRoles;
+
+import jakarta.ejb.EJB;
 
 import jakarta.servlet.ServletException;
 
@@ -45,17 +45,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serial;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.sql.DataSource;
-
-import net.jmp.demo.glassfish.war.dto.User;
+import net.jmp.demo.glassfish.war.service.UserService;
 
 import org.jspecify.annotations.Nullable;
 
@@ -79,10 +69,10 @@ public class UsersServlet extends HttpServlet {
     // Initialize the SLF4J Logger
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /// The SQLite data source
-    @Resource(lookup = "jdbc/sqlite")
+    /// The user service
+    @EJB
     @SuppressWarnings("NullAway")
-    private @Nullable DataSource dataSource;
+    private transient UserService userService;
 
     /// Default constructor
     UsersServlet() {
@@ -91,9 +81,9 @@ public class UsersServlet extends HttpServlet {
 
     /// Constructor for testing
     ///
-    /// @param dataSource javax.sql.DataSource
-    UsersServlet(final DataSource dataSource) {
-        this.dataSource = dataSource;
+    /// @param  userService net.jmp.demo.glassfish.war.service.UserService
+    UsersServlet(final UserService userService) {
+        this.userService = userService;
     }
 
     /// The GET method. Called from /users.
@@ -112,7 +102,7 @@ public class UsersServlet extends HttpServlet {
 
         if (projectId != null) {
             request.setAttribute("projectId", projectId);
-            request.setAttribute("users", this.readUsers(projectId));
+            request.setAttribute("users", this.userService.getForProject(projectId));
             request.getRequestDispatcher(USERS_JSP).forward(request, response);
         } else {
             throw new ServletException("Project ID is null or invalid");
@@ -151,56 +141,5 @@ public class UsersServlet extends HttpServlet {
         }
 
         return projectId;
-    }
-
-    /// Read all users for a project from the SQLite database
-    ///
-    /// @param  projectId   java.lang.Integer
-    /// @return             java.util.List
-    private List<User> readUsers(final Integer projectId) {
-        if (this.logger.isTraceEnabled()) {
-            this.logger.trace(entryWith(projectId));
-        }
-
-        final List<User> users = new ArrayList<>();
-        final String sql = "SELECT user_id, first_name, last_name, email, age, role, project_id, created_at FROM users WHERE project_id = ?";
-
-        if (this.dataSource == null) {
-            this.logger.error("The data source is null");
-        } else {
-            try (final Connection connection = this.dataSource.getConnection();
-                 final PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setInt(1, projectId);
-
-                try (final ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        final User user = new User();
-
-                        user.setUserId(resultSet.getInt("user_id"));
-                        user.setFirstName(resultSet.getString("first_name"));
-                        user.setLastName(resultSet.getString("last_name"));
-                        user.setEmail(resultSet.getString("email"));
-                        user.setAge(resultSet.getInt("age"));
-                        user.setRole(resultSet.getString("role"));
-                        user.setProjectId(resultSet.getInt("project_id"));
-                        user.setCreatedAt(resultSet.getTimestamp("created_at"));
-
-                        users.add(user);
-                    }
-                }
-            } catch (final SQLException e) {
-                this.logger.error("Error reading users from database", e);
-            }
-        }
-
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Read {} users for project {}", users.size(), projectId);
-        }
-
-        if (this.logger.isTraceEnabled()) {
-            this.logger.trace(exitWith(users));
-        }
-
-        return users;
     }
 }

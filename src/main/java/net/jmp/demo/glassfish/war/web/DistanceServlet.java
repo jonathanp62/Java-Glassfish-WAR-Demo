@@ -28,9 +28,6 @@ package net.jmp.demo.glassfish.war.web;
  * SOFTWARE.
  */
 
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-
 import jakarta.annotation.security.DeclareRoles;
 
 import jakarta.inject.Inject;
@@ -46,14 +43,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.io.Serial;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.jmp.demo.glassfish.war.dto.DistanceData;
 
-import org.bson.Document;
-import org.bson.types.ObjectId;
+import net.jmp.demo.glassfish.war.service.DistanceService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,23 +61,32 @@ import static net.jmp.util.logging.LoggerUtils.*;
 @DeclareRoles("user")
 @ServletSecurity(@HttpConstraint(rolesAllowed = "user"))
 public class DistanceServlet extends HttpServlet {
-    // Initialize the SLF4J Logger
-    private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
+    /// The serial version UID
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /// The distance JSP
     private static final String DISTANCE_JSP = "/WEB-INF/jsp/distance.jsp";
 
-    /// The MongoDB database
-    private final transient MongoDatabase mongoDatabase;
+    // Initialize the SLF4J Logger
+    private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /// The constructor
-    ///
-    /// @param  mongoDatabase   com.mongodb.client.MongoDatabase
+    /// The distance service
     @Inject
-    public DistanceServlet(final MongoDatabase mongoDatabase) {
-        super();
+    @SuppressWarnings("NullAway")
+    private transient DistanceService distanceService;
 
-        this.mongoDatabase = mongoDatabase;
+    /// Default constructor
+    /// It is required since there is a parameterized constructor.
+    public DistanceServlet() {
+        super();
+    }
+
+    /// Constructor for testing
+    ///
+    /// @param  distanceService net.jmp.demo.glassfish.war.service.DistanceService
+    DistanceServlet(final DistanceService distanceService) {
+        this.distanceService = distanceService;
     }
 
     /// The GET method. Called from /servlet/distance.
@@ -96,7 +101,7 @@ public class DistanceServlet extends HttpServlet {
             this.logger.trace(entryWith(request, response));
         }
 
-        final List<DistanceData> distances = this.readDistances();
+        final List<DistanceData> distances = this.distanceService.getAll();
 
         request.setAttribute("distances", distances);
 
@@ -105,55 +110,5 @@ public class DistanceServlet extends HttpServlet {
         if (this.logger.isTraceEnabled()) {
             this.logger.trace(exit());
         }
-    }
-
-    /// Read all documents from the distance collection
-    ///
-    /// @return java.util.List
-    private List<DistanceData> readDistances() {
-        if (this.logger.isTraceEnabled()) {
-            this.logger.trace(entry());
-        }
-
-        final List<DistanceData> distances = new ArrayList<>();
-        final MongoCollection<Document> collection = this.mongoDatabase.getCollection("distance");
-
-        for (final Document doc : collection.find()) {
-            final DistanceData data = new DistanceData();
-            final Object id = doc.get("_id");
-
-            if (id instanceof ObjectId objectId) {
-                data.setDocumentId(objectId.toHexString());
-            }
-
-            data.setFromZipCode(doc.getString("fromZipCode"));
-            data.setToZipCode(doc.getString("toZipCode"));
-            data.setToCity(doc.getString("toCity"));
-            data.setToState(doc.getString("toState"));
-
-            final Double miles = doc.getDouble("distanceInMiles");
-
-            if (miles != null) {
-                data.setDistanceInMiles(miles);
-            }
-
-            final Double kilometers = doc.getDouble("distanceInKilometers");
-
-            if (kilometers != null) {
-                data.setDistanceInKilometers(kilometers);
-            }
-
-            distances.add(data);
-        }
-
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Read {} distance documents", distances.size());
-        }
-
-        if (this.logger.isTraceEnabled()) {
-            this.logger.trace(exitWith(distances));
-        }
-
-        return distances;
     }
 }

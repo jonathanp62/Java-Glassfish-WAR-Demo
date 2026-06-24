@@ -28,11 +28,6 @@ package net.jmp.demo.glassfish.war.web;
  * SOFTWARE.
  */
 
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
-
 import jakarta.servlet.RequestDispatcher;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,8 +37,7 @@ import java.util.List;
 
 import net.jmp.demo.glassfish.war.dto.DistanceData;
 
-import org.bson.Document;
-import org.bson.types.ObjectId;
+import net.jmp.demo.glassfish.war.service.DistanceService;
 
 import org.junit.jupiter.api.Test;
 
@@ -65,37 +59,24 @@ class TestDistanceServlet {
 
     @Test
     void testDoGetSetsDistancesAttributeAndForwardsToDistanceJsp() throws Exception {
-        final MongoDatabase mongoDatabase = mock(MongoDatabase.class);
+        final DistanceService distanceService = mock(DistanceService.class);
         final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final RequestDispatcher dispatcher = mock(RequestDispatcher.class);
+        final DistanceData data = new DistanceData();
 
-        @SuppressWarnings("unchecked")
-        final MongoCollection<Document> collection = mock(MongoCollection.class);
+        data.setDocumentId("abc123");
+        data.setFromZipCode("10001");
+        data.setToZipCode("90210");
+        data.setToCity("Beverly Hills");
+        data.setToState("CA");
+        data.setDistanceInMiles(2789.456);
+        data.setDistanceInKilometers(4489.012);
 
-        @SuppressWarnings("unchecked")
-        final FindIterable<Document> findIterable = mock(FindIterable.class);
-
-        @SuppressWarnings("unchecked")
-        final MongoCursor<Document> cursor = mock(MongoCursor.class);
-
-        final ObjectId objectId = new ObjectId();
-        final Document doc = new Document("_id", objectId)
-                .append("fromZipCode", "10001")
-                .append("toZipCode", "90210")
-                .append("toCity", "Beverly Hills")
-                .append("toState", "CA")
-                .append("distanceInMiles", 2789.456)
-                .append("distanceInKilometers", 4489.012);
-
-        when(mongoDatabase.getCollection("distance")).thenReturn(collection);
-        when(collection.find()).thenReturn(findIterable);
-        when(findIterable.iterator()).thenReturn(cursor);
-        when(cursor.hasNext()).thenReturn(true, false);
-        when(cursor.next()).thenReturn(doc);
+        when(distanceService.getAll()).thenReturn(List.of(data));
         when(request.getRequestDispatcher(DISTANCE_JSP)).thenReturn(dispatcher);
 
-        final DistanceServlet servlet = new DistanceServlet(mongoDatabase);
+        final DistanceServlet servlet = new DistanceServlet(distanceService);
 
         servlet.doGet(request, response);
 
@@ -111,40 +92,28 @@ class TestDistanceServlet {
 
         assertEquals(1, distances.size());
 
-        final DistanceData data = distances.getFirst();
+        final DistanceData result = distances.getFirst();
 
-        assertEquals(objectId.toHexString(), data.getDocumentId());
-        assertEquals("10001", data.getFromZipCode());
-        assertEquals("90210", data.getToZipCode());
-        assertEquals("Beverly Hills", data.getToCity());
-        assertEquals("CA", data.getToState());
-        assertEquals(2789.456, data.getDistanceInMiles());
-        assertEquals(4489.012, data.getDistanceInKilometers());
+        assertEquals("abc123", result.getDocumentId());
+        assertEquals("10001", result.getFromZipCode());
+        assertEquals("90210", result.getToZipCode());
+        assertEquals("Beverly Hills", result.getToCity());
+        assertEquals("CA", result.getToState());
+        assertEquals(2789.456, result.getDistanceInMiles());
+        assertEquals(4489.012, result.getDistanceInKilometers());
     }
 
     @Test
     void testDoGetWithEmptyCollectionSetsEmptyListAndForwardsToDistanceJsp() throws Exception {
-        final MongoDatabase mongoDatabase = mock(MongoDatabase.class);
+        final DistanceService distanceService = mock(DistanceService.class);
         final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final RequestDispatcher dispatcher = mock(RequestDispatcher.class);
 
-        @SuppressWarnings("unchecked")
-        final MongoCollection<Document> collection = mock(MongoCollection.class);
-
-        @SuppressWarnings("unchecked")
-        final FindIterable<Document> findIterable = mock(FindIterable.class);
-
-        @SuppressWarnings("unchecked")
-        final MongoCursor<Document> cursor = mock(MongoCursor.class);
-
-        when(mongoDatabase.getCollection("distance")).thenReturn(collection);
-        when(collection.find()).thenReturn(findIterable);
-        when(findIterable.iterator()).thenReturn(cursor);
-        when(cursor.hasNext()).thenReturn(false);
+        when(distanceService.getAll()).thenReturn(List.of());
         when(request.getRequestDispatcher(DISTANCE_JSP)).thenReturn(dispatcher);
 
-        final DistanceServlet servlet = new DistanceServlet(mongoDatabase);
+        final DistanceServlet servlet = new DistanceServlet(distanceService);
 
         servlet.doGet(request, response);
 
@@ -155,5 +124,18 @@ class TestDistanceServlet {
         verify(dispatcher).forward(request, response);
 
         assertTrue(distancesCaptor.getValue().isEmpty());
+    }
+
+    @Test
+    void testDoGetWithServiceExceptionPropagatesRuntimeException() {
+        final DistanceService distanceService = mock(DistanceService.class);
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        final HttpServletResponse response = mock(HttpServletResponse.class);
+
+        when(distanceService.getAll()).thenThrow(new RuntimeException("Service failure"));
+
+        final DistanceServlet servlet = new DistanceServlet(distanceService);
+
+        assertThrows(RuntimeException.class, () -> servlet.doGet(request, response));
     }
 }

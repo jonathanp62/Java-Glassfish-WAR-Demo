@@ -38,6 +38,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.TableGenerator;
 
 import org.jspecify.annotations.Nullable;
 
@@ -50,7 +51,8 @@ public class Person implements Serializable {
 
     /// The identifier
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableGenerator(name = "people_gen", table = "id_gen", pkColumnName = "gen_name", valueColumnName = "gen_val", pkColumnValue = "people_id", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "people_gen")
     @Column(name = "id")
     @Nullable
     private Long id;

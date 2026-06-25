@@ -31,6 +31,8 @@ package net.jmp.demo.glassfish.war.web;
 
 import jakarta.annotation.security.DeclareRoles;
 
+import jakarta.ejb.EJB;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
@@ -59,6 +61,10 @@ import java.util.Set;
 
 import net.jmp.demo.glassfish.war.dto.FormData;
 
+import net.jmp.demo.glassfish.war.dto.Person;
+
+import net.jmp.demo.glassfish.war.service.PeopleService;
+
 import net.jmp.demo.glassfish.war.util.StringUtils;
 
 import org.slf4j.Logger;
@@ -79,6 +85,11 @@ public class FormServlet extends HttpServlet {
 
     /// The input validator
     private final transient Validator validator;
+
+    /// The people service
+    @EJB
+    @SuppressWarnings("NullAway")
+    private transient PeopleService peopleService;
 
     /// The form JSP
     private static final String FORM_JSP = "/WEB-INF/jsp/form.jsp";
@@ -148,6 +159,14 @@ public class FormServlet extends HttpServlet {
 
         if (violations.isEmpty()) {
             request.setAttribute("successMessage", this.bundle.getString("servlet.form.success"));
+
+            final Person person = new Person();
+
+            person.setComment(comment);
+            person.setEmail(email);
+            person.setName(name);
+
+            this.peopleService.save(person);
         } else {
             final List<String> errors = violations.stream()
                     .map(ConstraintViolation::getMessage)

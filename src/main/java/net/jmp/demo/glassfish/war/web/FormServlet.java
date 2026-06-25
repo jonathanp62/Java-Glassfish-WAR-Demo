@@ -108,6 +108,21 @@ public class FormServlet extends HttpServlet {
         }
     }
 
+    /// Constructor for testing
+    ///
+    /// @param  bundle          java.util.ResourceBundle
+    /// @param  peopleService   net.jmp.demo.glassfish.war.service.PeopleService
+    FormServlet(final ResourceBundle bundle, final PeopleService peopleService) {
+        super();
+
+        this.bundle = bundle;
+        this.peopleService = peopleService;
+
+        try (final ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            this.validator = factory.getValidator();
+        }
+    }
+
     /// The GET method. Called from /servlet/form.
     ///
     /// @param  request     jakarta.servlet.http.HttpServletRequest
@@ -162,9 +177,17 @@ public class FormServlet extends HttpServlet {
 
             final Person person = new Person();
 
-            person.setComment(comment);
-            person.setEmail(email);
-            person.setName(name);
+            if (comment != null) {
+                person.setComment(comment);
+            }
+
+            if (email != null) {
+                person.setEmail(email);
+            }
+
+            if (name != null) {
+                person.setName(name);
+            }
 
             this.peopleService.save(person);
         } else {

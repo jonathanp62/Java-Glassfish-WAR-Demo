@@ -52,6 +52,7 @@
         <p><a href="<c:url value='/servlet/hello' />"><fmt:message key="jsp.index.hello.servlet.string" /></a></p>
         <p><a href="<c:url value='/servlet/init-param' />"><fmt:message key="jsp.index.init.param" /></a></p>
         <p><a href="<c:url value='/servlet/init-param-xml' />"><fmt:message key="jsp.index.init.param.xml" /></a></p>
+        <p><a href="<c:url value='/servlet/people' />"><fmt:message key="jsp.index.people" /></a></p>
         <p><a href="<c:url value='/servlet/projects' />"><fmt:message key="jsp.index.projects" /></a></p>
         <p><a href="<c:url value='/servlet/register' />"><fmt:message key="jsp.index.register" /></a></p>
         <p><a href="<c:url value='/servlet/session' />"><fmt:message key="jsp.index.session" /></a></p>

@@ -31,6 +31,8 @@ package net.jmp.demo.glassfish.war.web;
 
 import jakarta.annotation.security.DeclareRoles;
 
+import jakarta.ejb.EJB;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
@@ -59,6 +61,10 @@ import java.util.Set;
 
 import net.jmp.demo.glassfish.war.dto.FormData;
 
+import net.jmp.demo.glassfish.war.dto.Person;
+
+import net.jmp.demo.glassfish.war.service.PeopleService;
+
 import net.jmp.demo.glassfish.war.util.StringUtils;
 
 import org.slf4j.Logger;
@@ -80,6 +86,11 @@ public class FormServlet extends HttpServlet {
     /// The input validator
     private final transient Validator validator;
 
+    /// The people service
+    @EJB
+    @SuppressWarnings("NullAway")
+    private transient PeopleService peopleService;
+
     /// The form JSP
     private static final String FORM_JSP = "/WEB-INF/jsp/form.jsp";
 
@@ -91,6 +102,21 @@ public class FormServlet extends HttpServlet {
         super();
 
         this.bundle = bundle;
+
+        try (final ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            this.validator = factory.getValidator();
+        }
+    }
+
+    /// Constructor for testing
+    ///
+    /// @param  bundle          java.util.ResourceBundle
+    /// @param  peopleService   net.jmp.demo.glassfish.war.service.PeopleService
+    FormServlet(final ResourceBundle bundle, final PeopleService peopleService) {
+        super();
+
+        this.bundle = bundle;
+        this.peopleService = peopleService;
 
         try (final ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             this.validator = factory.getValidator();
@@ -148,6 +174,22 @@ public class FormServlet extends HttpServlet {
 
         if (violations.isEmpty()) {
             request.setAttribute("successMessage", this.bundle.getString("servlet.form.success"));
+
+            final Person person = new Person();
+
+            if (comment != null) {
+                person.setComment(comment);
+            }
+
+            if (email != null) {
+                person.setEmail(email);
+            }
+
+            if (name != null) {
+                person.setName(name);
+            }
+
+            this.peopleService.save(person);
         } else {
             final List<String> errors = violations.stream()
                     .map(ConstraintViolation::getMessage)

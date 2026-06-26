@@ -58,3 +58,11 @@ INSERT INTO cars (year, make, model, color, style) VALUES
 (2015, 'Hyundai', 'Sonata', 'Unknown', 'Four door sedan'),
 (2019, 'Volvo', 'S60', 'Red', 'Four door sedan'),
 (2026, 'Honda', 'Civic Sport Touring', 'Boost Blue', 'Four door hatchback');
+
+-- 7. Create the people table
+CREATE TABLE people (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    email TEXT,
+    comment TEXT
+);

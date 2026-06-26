@@ -39,6 +39,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import net.jmp.demo.glassfish.war.dto.Person;
+
+import net.jmp.demo.glassfish.war.service.PeopleService;
+
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -79,9 +83,11 @@ class TestFormServlet {
     @Test
     void testDoPostWithValidInputSetsSuccessMessageAndForwardsToFormJsp() throws Exception {
         final ResourceBundle bundle = mock(ResourceBundle.class);
+        final PeopleService peopleService = mock(PeopleService.class);
         final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final RequestDispatcher dispatcher = mock(RequestDispatcher.class);
+        final ArgumentCaptor<Person> personCaptor = ArgumentCaptor.forClass(Person.class);
 
         when(bundle.getString("servlet.form.success")).thenReturn("Form submitted successfully");
         when(request.getParameter("name")).thenReturn(" Jonathan ");
@@ -89,7 +95,7 @@ class TestFormServlet {
         when(request.getParameter("comment")).thenReturn(" This is a test comment. ");
         when(request.getRequestDispatcher(FORM_JSP)).thenReturn(dispatcher);
 
-        final FormServlet servlet = new FormServlet(bundle);
+        final FormServlet servlet = new FormServlet(bundle, peopleService);
 
         servlet.doPost(request, response);
 
@@ -100,6 +106,13 @@ class TestFormServlet {
         verify(request).setAttribute("successMessage", "Form submitted successfully");
         verify(request, never()).setAttribute(eq("errors"), any());
         verify(dispatcher).forward(request, response);
+        verify(peopleService).save(personCaptor.capture());
+
+        final Person saved = personCaptor.getValue();
+
+        assertEquals("Jonathan", saved.getName());
+        assertEquals("jonathan@example.com", saved.getEmail());
+        assertEquals("This is a test comment.", saved.getComment());
     }
 
     @Test

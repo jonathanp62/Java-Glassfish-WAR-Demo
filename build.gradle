@@ -50,7 +50,7 @@ apply plugin: 'net.jmp.gradle.plugin.projectinfo-info'
 
 ext {
 	project.group = 'net.jmp.demo.glassfish.war'
-	project.version = "${appVersion}-SNAPSHOT"
+	project.version = "${appVersion}"
 	project.description = 'to demonstrate a basic WAR application running Glassfish 8'
 }
 

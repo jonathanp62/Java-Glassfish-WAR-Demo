@@ -1,8 +1,7 @@
 package net.jmp.demo.glassfish.war.web;
 
 /*
- * (#)ErrorServlet.java 0.2.0   06/15/2026
- * (#)ErrorServlet.java 0.1.0   06/06/2026
+ * (#)CarsServlet.java  0.2.0   06/22/2026
  *
  * @author   Jonathan Parker
  *
@@ -31,8 +30,7 @@ package net.jmp.demo.glassfish.war.web;
 
 import jakarta.annotation.security.DeclareRoles;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import jakarta.ejb.EJB;
 
 import jakarta.servlet.ServletException;
 
@@ -45,35 +43,67 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.io.Serial;
 
-import java.util.ResourceBundle;
+import net.jmp.demo.glassfish.war.service.CarService;
 
-/// The error servlet class. Used to drive the 500 error JSP.
-@WebServlet(urlPatterns = "/servlet/error")
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static net.jmp.util.logging.LoggerUtils.entryWith;
+import static net.jmp.util.logging.LoggerUtils.exit;
+
+/// The projects servlet class
+@WebServlet(urlPatterns = "/servlet/cars")
 @DeclareRoles("user")
 @ServletSecurity(@HttpConstraint(rolesAllowed = "user"))
-public class ErrorServlet extends HttpServlet {
-    /// The messages resource bundle
-    private final transient ResourceBundle bundle;
+public class CarsServlet extends HttpServlet {
+    /// The serial version UID
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    /// The constructor
-    ///
-    /// @param  bundle  java.util.ResourceBundle
-    @Inject
-    public ErrorServlet(@Named("messages") final ResourceBundle bundle) {
+    /// The cars JSP
+    private static final String CARS_JSP = "/WEB-INF/jsp/cars.jsp";
+
+    // Initialize the SLF4J Logger
+    private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    /// The car service
+    @EJB
+    @SuppressWarnings("NullAway")
+    private transient CarService carService;
+
+    /// Default constructor
+    /// It is required by Glassfish since
+    /// there is a parameterized constructor.
+    public CarsServlet() {
         super();
-
-        this.bundle = bundle;
     }
 
-    /// The GET method
+    /// Constructor for testing
+    ///
+    /// @param  carService  net.jmp.demo.glassfish.war.service.CarService
+    CarsServlet(final CarService carService) {
+        this.carService = carService;
+    }
+
+    /// The GET method. Called from /servlet/cars.
     ///
     /// @param  request     jakarta.servlet.http.HttpServletRequest
     /// @param  response    jakarta.servlet.http.HttpServletResponse
-    /// @throws             jakarta.servlet.ServletException When an error occurs
-    /// @throws             java.io.IOException When an I/O error occurs
+    /// @throws             jakarta.servlet.ServletException    When an error occurs
+    /// @throws             java.io.IOException                 When an I/O error occurs
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
-        throw new ServletException(this.bundle.getString("servlet.error.message"));
+        if (this.logger.isTraceEnabled()) {
+            this.logger.trace(entryWith(request, response));
+        }
+
+        request.setAttribute("cars", this.carService.getAll());
+        request.getRequestDispatcher(CARS_JSP).forward(request, response);
+
+        if (this.logger.isTraceEnabled()) {
+            this.logger.trace(exit());
+        }
     }
 }

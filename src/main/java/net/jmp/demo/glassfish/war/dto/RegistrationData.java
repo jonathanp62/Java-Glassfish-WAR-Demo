@@ -1,10 +1,11 @@
-package net.jmp.demo.glassfish.war.util;
+package net.jmp.demo.glassfish.war.dto;
 
 /*
- * (#)StringUtils.java  0.2.0   06/12/2026
- * (#)StringUtils.java  0.1.0   06/04/2026
+ * (#)RegistrationData.java 0.2.0   06/12/2026
  *
  * @author   Jonathan Parker
+ * @version  0.2.0
+ * @since    0.2.0
  *
  * MIT License
  *
@@ -29,25 +30,31 @@ package net.jmp.demo.glassfish.war.util;
  * SOFTWARE.
  */
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 import org.jspecify.annotations.Nullable;
 
-/// The string utilities class
-public class StringUtils {
-    private StringUtils() {
-        throw new UnsupportedOperationException("The StringUtils class cannot be instantiated");
+/// The registration form data class
+public class RegistrationData {
+    /// The email address
+    @NotBlank(message = "{servlet.form.validation.required.email}")
+    @Email(message = "{servlet.form.validation.email}")
+    private final @Nullable String email;
+
+    /// The constructor
+    ///
+    /// @param  email   java.lang.String
+    public RegistrationData(final @Nullable String email) {
+        super();
+
+        this.email = email;
     }
 
-    /// The trim to null method
+    /// The get email method
     ///
-    /// @param  s   java.lang.String
-    /// @return     java.lang.String
-    public static @Nullable String trimToNull(final @Nullable String s) {
-        if (s == null) {
-            return null;
-        }
-
-        final String t = s.trim();
-
-        return t.isBlank() ? null : t;
+    /// @return java.lang.String
+    public @Nullable String getEmail() {
+        return this.email;
     }
 }

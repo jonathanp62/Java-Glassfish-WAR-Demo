@@ -1,8 +1,8 @@
-package net.jmp.demo.glassfish.war.util;
+@NullMarked
+package net.jmp.demo.glassfish.war.config;
 
 /*
- * (#)StringUtils.java  0.2.0   06/12/2026
- * (#)StringUtils.java  0.1.0   06/04/2026
+ * (#)package-info.java 0.2.0   06/16/2026
  *
  * @author   Jonathan Parker
  *
@@ -29,25 +29,4 @@ package net.jmp.demo.glassfish.war.util;
  * SOFTWARE.
  */
 
-import org.jspecify.annotations.Nullable;
-
-/// The string utilities class
-public class StringUtils {
-    private StringUtils() {
-        throw new UnsupportedOperationException("The StringUtils class cannot be instantiated");
-    }
-
-    /// The trim to null method
-    ///
-    /// @param  s   java.lang.String
-    /// @return     java.lang.String
-    public static @Nullable String trimToNull(final @Nullable String s) {
-        if (s == null) {
-            return null;
-        }
-
-        final String t = s.trim();
-
-        return t.isBlank() ? null : t;
-    }
-}
+import org.jspecify.annotations.NullMarked;

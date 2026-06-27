@@ -1,8 +1,9 @@
 /*
+ * (#)build.gradle  0.2.0   06/11/2026
  * (#)build.gradle  0.1.0   05/29/2026
  *
  * @author   Jonathan Parker
- * @version  0.1.0
+ * @version  0.2.0
  * @since    0.1.0
  *
  * MIT License
@@ -49,7 +50,7 @@ apply plugin: 'net.jmp.gradle.plugin.projectinfo-info'
 
 ext {
 	project.group = 'net.jmp.demo.glassfish.war'
-	project.version = '0.1.0'
+	project.version = "${appVersion}"
 	project.description = 'to demonstrate a basic WAR application running Glassfish 8'
 }
 
@@ -76,8 +77,10 @@ dependencies {
 	compileOnly 		(libs.bundles.jakarta)
 	compileOnly 		(libs.org.glassfish.web.jakarta.servlet.jsp.jstl)
 	compileOnly 		(libs.org.jspecify.jspecify)
+	compileOnly 		(libs.org.xerial.sqlite.jdbc)
 
 	implementation 		(libs.bundles.logging)
+	implementation 		(libs.org.mongodb.mongodb.driver.sync)
 
 	errorprone			('com.uber.nullaway:nullaway:0.13.4')
 	errorprone 			('com.google.errorprone:error_prone_core:2.49.0')
@@ -89,12 +92,20 @@ dependencies {
 	mockitoAgent 		(libs.org.mockito.mockito.core)
 
 	testRuntimeOnly		(libs.ch.qos.logback.logback.classic)
+	testRuntimeOnly		(libs.org.glassfish.expressly.expressly)
 	testRuntimeOnly		(libs.org.glassfish.jersey.core.jersey.common)
+	testRuntimeOnly		(libs.org.hibernate.validator.hibernate.validator)
 	testRuntimeOnly		('org.junit.platform:junit-platform-launcher')
 }
 
 nullaway {
 	annotatedPackages.add('net.jmp.demo.glassfish.war')
+}
+
+war {
+	filesMatching('WEB-INF/web.xml') {
+		expand(appVersion: project.version)
+	}
 }
 
 tasks.compileJava {
@@ -105,7 +116,7 @@ tasks.compileJava {
 tasks.register('deploy', Copy) {
 	dependsOn build			// Forces a fresh build before deploying
 	from war.archiveFile	// Path to your local built WAR file
-	into '/usr/local/glassfish8/glassfish/domains/domain1/autodeploy'
+	into '/opt/glassfish/glassfish8/glassfish/domains/jonathan/autodeploy'
 }
 
 tasks.withType(Javadoc).configureEach {

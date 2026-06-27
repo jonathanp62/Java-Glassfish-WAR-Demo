@@ -1,8 +1,7 @@
-package net.jmp.demo.glassfish.war.util;
+package net.jmp.demo.glassfish.war.security;
 
 /*
- * (#)StringUtils.java  0.2.0   06/12/2026
- * (#)StringUtils.java  0.1.0   06/04/2026
+ * (#)SecurityConfig.java   0.2.0   06/15/2026
  *
  * @author   Jonathan Parker
  *
@@ -29,25 +28,27 @@ package net.jmp.demo.glassfish.war.util;
  * SOFTWARE.
  */
 
-import org.jspecify.annotations.Nullable;
+import jakarta.enterprise.context.ApplicationScoped;
 
-/// The string utilities class
-public class StringUtils {
-    private StringUtils() {
-        throw new UnsupportedOperationException("The StringUtils class cannot be instantiated");
-    }
+import jakarta.security.enterprise.authentication.mechanism.http.BasicAuthenticationMechanismDefinition;
 
-    /// The trim to null method
-    ///
-    /// @param  s   java.lang.String
-    /// @return     java.lang.String
-    public static @Nullable String trimToNull(final @Nullable String s) {
-        if (s == null) {
-            return null;
-        }
+import jakarta.security.enterprise.identitystore.InMemoryIdentityStoreDefinition;
 
-        final String t = s.trim();
-
-        return t.isBlank() ? null : t;
-    }
+/// The application security configuration class
+///
+/// Found a way to test the security configuration
+/// Using Safari, open a private window and navigate to a servlet
+/// Once the authentication has been made, close the private window,
+/// open a new one, then navigate to the same or a different servlet
+///
+@BasicAuthenticationMechanismDefinition(realmName = "demo-realm")
+@InMemoryIdentityStoreDefinition({
+        @InMemoryIdentityStoreDefinition.Credentials(
+                callerName = "jonathan",
+                password = "secret",
+                groups = {"user"}
+        )
+})
+@ApplicationScoped
+public class SecurityConfig {
 }

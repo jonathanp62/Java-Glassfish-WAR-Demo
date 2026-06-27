@@ -1,8 +1,9 @@
 <%--
+ (#)index.jsp   0.2.0   06/11/2026
  (#)index.jsp   0.1.0   05/30/2026
 
  @author   Jonathan Parker
- @version  0.1.0
+ @version  0.2.0
  @since    0.1.0
 
  MIT License
@@ -41,13 +42,18 @@
     <body>
         <h2><fmt:message key="jsp.index.title" /></h2>
         <h3><fmt:message key="jsp.index.hello" /></h3>
-        <p><a href="<c:url value='/api/hello' />"><fmt:message key="jsp.index.hello.resource.string" /></a></p>
-        <p><a href="<c:url value='/api/hello/json' />"><fmt:message key="jsp.index.hello.resource.json" /></a></p>
+        <h3><fmt:message key="word.version" /> ${initParam.appVersion}</h3>
+        <p><a href="<c:url value='/servlet/cars' />"><fmt:message key="jsp.index.cars" /></a></p>
         <p><a href="<c:url value='/servlet/error' />"><fmt:message key="jsp.index.error" /></a></p>
-        <p><a href="<c:url value='/servlet/hello' />"><fmt:message key="jsp.index.hello.servlet.string" /></a></p>
+        <p><a href="<c:url value='/servlet/distance' />"><fmt:message key="jsp.index.distance" /></a></p>
         <p><a href="<c:url value='/servlet/form' />"><fmt:message key="jsp.index.form.demo" /></a></p>
+        <p><a href="<c:url value='/api/hello/json' />"><fmt:message key="jsp.index.hello.resource.json" /></a></p>
+        <p><a href="<c:url value='/api/hello' />"><fmt:message key="jsp.index.hello.resource.string" /></a></p>
+        <p><a href="<c:url value='/servlet/hello' />"><fmt:message key="jsp.index.hello.servlet.string" /></a></p>
         <p><a href="<c:url value='/servlet/init-param' />"><fmt:message key="jsp.index.init.param" /></a></p>
         <p><a href="<c:url value='/servlet/init-param-xml' />"><fmt:message key="jsp.index.init.param.xml" /></a></p>
+        <p><a href="<c:url value='/servlet/people' />"><fmt:message key="jsp.index.people" /></a></p>
+        <p><a href="<c:url value='/servlet/projects' />"><fmt:message key="jsp.index.projects" /></a></p>
         <p><a href="<c:url value='/servlet/register' />"><fmt:message key="jsp.index.register" /></a></p>
         <p><a href="<c:url value='/servlet/session' />"><fmt:message key="jsp.index.session" /></a></p>
     </body>

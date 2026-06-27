@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
+ (#)web.xml 0.2.0   06/11/2026
  (#)web.xml 0.1.0   05/31/2026
 
  @author   Jonathan Parker
- @version  0.1.0
+ @version  0.2.0
  @since    0.1.0
 
  MIT License
@@ -35,6 +36,11 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd"
         version="6.1">
+    <context-param>
+        <param-name>appVersion</param-name>
+        <param-value>${appVersion}</param-value>
+    </context-param>
+
     <context-param>
         <param-name>jakarta.servlet.jsp.jstl.fmt.localizationContext</param-name>
         <param-value>messages</param-value>

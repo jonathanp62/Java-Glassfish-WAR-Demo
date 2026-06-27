@@ -1,6 +1,7 @@
 package net.jmp.demo.glassfish.war.web;
 
 /*
+ * (#)HelloServlet.java 0.2.0   06/15/2026
  * (#)HelloServlet.java 0.1.0   06/02/2026
  *
  * @author   Jonathan Parker
@@ -28,11 +29,15 @@ package net.jmp.demo.glassfish.war.web;
  * SOFTWARE.
  */
 
+import jakarta.annotation.security.DeclareRoles;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import jakarta.servlet.ServletException;
 
+import jakarta.servlet.annotation.HttpConstraint;
+import jakarta.servlet.annotation.ServletSecurity;
 import jakarta.servlet.annotation.WebServlet;
 
 import jakarta.servlet.http.HttpServlet;
@@ -53,6 +58,8 @@ import static net.jmp.util.logging.LoggerUtils.*;
 
 /// The hello servlet class
 @WebServlet(urlPatterns = "/servlet/hello")
+@DeclareRoles("user")
+@ServletSecurity(@HttpConstraint(rolesAllowed = "user"))
 public class HelloServlet extends HttpServlet {
     // Initialize the SLF4J Logger
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());

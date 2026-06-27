@@ -39,6 +39,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import net.jmp.demo.glassfish.war.dto.Person;
+
+import net.jmp.demo.glassfish.war.service.PeopleService;
+
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,17 +51,11 @@ import org.mockito.ArgumentCaptor;
 
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import static org.mockito.ArgumentMatchers.any;
 
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /// The test class for the FormServlet class
 @ExtendWith(MockitoExtension.class)
@@ -85,9 +83,11 @@ class TestFormServlet {
     @Test
     void testDoPostWithValidInputSetsSuccessMessageAndForwardsToFormJsp() throws Exception {
         final ResourceBundle bundle = mock(ResourceBundle.class);
+        final PeopleService peopleService = mock(PeopleService.class);
         final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final RequestDispatcher dispatcher = mock(RequestDispatcher.class);
+        final ArgumentCaptor<Person> personCaptor = ArgumentCaptor.forClass(Person.class);
 
         when(bundle.getString("servlet.form.success")).thenReturn("Form submitted successfully");
         when(request.getParameter("name")).thenReturn(" Jonathan ");
@@ -95,7 +95,7 @@ class TestFormServlet {
         when(request.getParameter("comment")).thenReturn(" This is a test comment. ");
         when(request.getRequestDispatcher(FORM_JSP)).thenReturn(dispatcher);
 
-        final FormServlet servlet = new FormServlet(bundle);
+        final FormServlet servlet = new FormServlet(bundle, peopleService);
 
         servlet.doPost(request, response);
 
@@ -106,6 +106,13 @@ class TestFormServlet {
         verify(request).setAttribute("successMessage", "Form submitted successfully");
         verify(request, never()).setAttribute(eq("errors"), any());
         verify(dispatcher).forward(request, response);
+        verify(peopleService).save(personCaptor.capture());
+
+        final Person saved = personCaptor.getValue();
+
+        assertEquals("Jonathan", saved.getName());
+        assertEquals("jonathan@example.com", saved.getEmail());
+        assertEquals("This is a test comment.", saved.getComment());
     }
 
     @Test
@@ -117,9 +124,6 @@ class TestFormServlet {
         @SuppressWarnings("rawtypes")
         final ArgumentCaptor<List> errorsCaptor = ArgumentCaptor.forClass(List.class);
 
-        when(bundle.getString("servlet.form.validation.required.name")).thenReturn("Name is required");
-        when(bundle.getString("servlet.form.validation.required.email")).thenReturn("Email is required");
-        when(bundle.getString("servlet.form.validation.required.comment")).thenReturn("Comment is required");
         when(request.getParameter("name")).thenReturn(" ");     // Trim to null applies
         when(request.getParameter("email")).thenReturn(null);   // Trim to null applies
         when(request.getParameter("comment")).thenReturn("");   // Trim to null applies
@@ -136,7 +140,13 @@ class TestFormServlet {
         verify(request, never()).setAttribute(eq("successMessage"), any());
         verify(dispatcher).forward(request, response);
 
-        assertEquals(List.of("Name is required", "Email is required", "Comment is required"), errorsCaptor.getValue());
+        @SuppressWarnings("unchecked")
+        final List<String> errors = errorsCaptor.getValue();    // Errors set by bean validation
+
+        assertEquals(3, errors.size());
+        assertTrue(errors.contains("Name is required"));
+        assertTrue(errors.contains("Email is required"));
+        assertTrue(errors.contains("Comment is required"));
     }
 
     @Test
@@ -148,8 +158,6 @@ class TestFormServlet {
         @SuppressWarnings("rawtypes")
         final ArgumentCaptor<List> errorsCaptor = ArgumentCaptor.forClass(List.class);
 
-        when(bundle.getString("servlet.form.validation.email")).thenReturn("Email is invalid");
-        when(bundle.getString("servlet.form.validation.comment")).thenReturn("Comment is too short");
         when(request.getParameter("name")).thenReturn("Jonathan");
         when(request.getParameter("email")).thenReturn("jonathan");
         when(request.getParameter("comment")).thenReturn("Short");
@@ -163,7 +171,12 @@ class TestFormServlet {
         verify(request, never()).setAttribute(eq("successMessage"), any());
         verify(dispatcher).forward(request, response);
 
-        assertEquals(List.of("Email is invalid", "Comment is too short"), errorsCaptor.getValue());
+        @SuppressWarnings("unchecked")
+        final List<String> errors = errorsCaptor.getValue();    // Errors set by bean validation
+
+        assertEquals(2, errors.size());
+        assertTrue(errors.contains("Email must be a valid email address"));
+        assertTrue(errors.contains("Comment must be at least 10 characters"));
     }
 
     @Test

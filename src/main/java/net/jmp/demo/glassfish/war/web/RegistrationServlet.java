@@ -1,6 +1,7 @@
 package net.jmp.demo.glassfish.war.web;
 
 /*
+ * (#)RegistrationServlet.java  0.3.0   07/02/2026
  * (#)RegistrationServlet.java  0.2.0   06/12/2026
  * (#)RegistrationServlet.java  0.1.0   06/04/2026
  *

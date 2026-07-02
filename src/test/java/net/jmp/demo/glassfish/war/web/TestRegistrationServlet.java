@@ -1,6 +1,7 @@
 package net.jmp.demo.glassfish.war.web;
 
 /*
+ * (#)TestRegistrationServlet.java  0.3.0   07/02/2026
  * (#)TestRegistrationServlet.java  0.1.0   06/04/2026
  *
  * @author   Jonathan Parker
@@ -39,6 +40,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import net.jmp.demo.glassfish.war.service.RegistrationService;
+
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -71,13 +74,14 @@ class TestRegistrationServlet {
     @Test
     void testDoGetForwardsToRegisterJsp() throws Exception {
         final ResourceBundle bundle = mock(ResourceBundle.class);
+        final RegistrationService registrationService = mock(RegistrationService.class);
         final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final RequestDispatcher dispatcher = mock(RequestDispatcher.class);
 
         when(request.getRequestDispatcher(REGISTER_JSP)).thenReturn(dispatcher);
 
-        final RegistrationServlet servlet = new RegistrationServlet(bundle);
+        final RegistrationServlet servlet = new RegistrationServlet(bundle, registrationService);
 
         servlet.doGet(request, response);
 
@@ -88,6 +92,7 @@ class TestRegistrationServlet {
     @Test
     void testDoPostWithValidInputSetsSuccessMessageAndForwardsToRegisteredJsp() throws Exception {
         final ResourceBundle bundle = mock(ResourceBundle.class);
+        final RegistrationService registrationService = mock(RegistrationService.class);
         final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final RequestDispatcher dispatcher = mock(RequestDispatcher.class);
@@ -96,7 +101,7 @@ class TestRegistrationServlet {
         when(request.getParameter("email")).thenReturn(" jonathan@example.com ");
         when(request.getRequestDispatcher(REGISTERED_JSP)).thenReturn(dispatcher);
 
-        final RegistrationServlet servlet = new RegistrationServlet(bundle);
+        final RegistrationServlet servlet = new RegistrationServlet(bundle, registrationService);
 
         servlet.doPost(request, response);
 
@@ -110,6 +115,7 @@ class TestRegistrationServlet {
     @Test
     void testDoPostWithMissingInputSetsRequiredValidationErrorAndForwardsToRegisteredJsp() throws Exception {
         final ResourceBundle bundle = mock(ResourceBundle.class);
+        final RegistrationService registrationService = mock(RegistrationService.class);
         final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final RequestDispatcher dispatcher = mock(RequestDispatcher.class);
@@ -119,7 +125,7 @@ class TestRegistrationServlet {
         when(request.getParameter("email")).thenReturn(" ");
         when(request.getRequestDispatcher(REGISTERED_JSP)).thenReturn(dispatcher);
 
-        final RegistrationServlet servlet = new RegistrationServlet(bundle);
+        final RegistrationServlet servlet = new RegistrationServlet(bundle, registrationService);
 
         servlet.doPost(request, response);
 
@@ -134,6 +140,7 @@ class TestRegistrationServlet {
     @Test
     void testDoPostWithInvalidEmailSetsValidationErrorAndForwardsToRegisteredJsp() throws Exception {
         final ResourceBundle bundle = mock(ResourceBundle.class);
+        final RegistrationService registrationService = mock(RegistrationService.class);
         final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final RequestDispatcher dispatcher = mock(RequestDispatcher.class);
@@ -143,7 +150,7 @@ class TestRegistrationServlet {
         when(request.getParameter("email")).thenReturn("jonathan");
         when(request.getRequestDispatcher(REGISTERED_JSP)).thenReturn(dispatcher);
 
-        final RegistrationServlet servlet = new RegistrationServlet(bundle);
+        final RegistrationServlet servlet = new RegistrationServlet(bundle, registrationService);
 
         servlet.doPost(request, response);
 
@@ -161,13 +168,14 @@ class TestRegistrationServlet {
     @Test
     void testDoPostWrapsUnsupportedEncodingExceptionInServletException() throws Exception {
         final ResourceBundle bundle = mock(ResourceBundle.class);
+        final RegistrationService registrationService = mock(RegistrationService.class);
         final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final UnsupportedEncodingException exception = new UnsupportedEncodingException("UTF-8");
 
         doThrow(exception).when(request).setCharacterEncoding("UTF-8");
 
-        final RegistrationServlet servlet = new RegistrationServlet(bundle);
+        final RegistrationServlet servlet = new RegistrationServlet(bundle, registrationService);
 
         final ServletException servletException = assertThrows(ServletException.class, () -> servlet.doPost(request, response));
 

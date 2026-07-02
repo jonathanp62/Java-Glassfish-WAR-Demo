@@ -61,6 +61,8 @@ import java.util.Set;
 
 import net.jmp.demo.glassfish.war.dto.RegistrationData;
 
+import net.jmp.demo.glassfish.war.service.RegistrationService;
+
 import net.jmp.demo.glassfish.war.util.StringUtils;
 
 import org.slf4j.Logger;
@@ -79,6 +81,9 @@ public class RegistrationServlet extends HttpServlet {
     /// The messages resource bundle
     private final transient ResourceBundle bundle;
 
+    /// The registration service
+    private final transient RegistrationService registrationService;
+
     /// The input validator
     private final transient Validator validator;
 
@@ -92,10 +97,11 @@ public class RegistrationServlet extends HttpServlet {
     ///
     /// @param  bundle  java.util.ResourceBundle
     @Inject
-    public RegistrationServlet(@Named("messages") final ResourceBundle bundle) {
+    public RegistrationServlet(@Named("messages") final ResourceBundle bundle, final RegistrationService registrationService) {
         super();
 
         this.bundle = bundle;
+        this.registrationService = registrationService;
 
         try (final ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             this.validator = factory.getValidator();
@@ -150,6 +156,8 @@ public class RegistrationServlet extends HttpServlet {
         if (violations.isEmpty()) {
             final String pattern = this.bundle.getString("servlet.registration.success");
             final String successMessage = MessageFormat.format(pattern, email);
+
+            this.registrationService.register(email);
 
             request.setAttribute("successMessage", successMessage);
         } else {

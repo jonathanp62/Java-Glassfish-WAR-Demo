@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
+ (#)glassfish-web.xml   0.3.0   06/29/2026
  (#)glassfish-web.xml   0.2.0   06/11/2026
  (#)glassfish-web.xml   0.1.0   05/30/2026
 
  @author   Jonathan Parker
- @version  0.2.0
+ @version  0.3.0
  @since    0.1.0
 
  MIT License
@@ -36,7 +37,7 @@
         "http://glassfish.org/dtds/glassfish-web-app_3_0-1.dtd">
 
 <glassfish-web-app>
-    <context-root>/glassfish-war-demo/0.2.0</context-root>
+    <context-root>/glassfish-war-demo/0.3.0</context-root>
 
     <session-config>
         <session-manager persistence-type="memory" /> <!-- Not sure how to disable or clear -->

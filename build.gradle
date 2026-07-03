@@ -1,9 +1,10 @@
 /*
+ * (#)build.gradle  0.3.0   07/03/2026
  * (#)build.gradle  0.2.0   06/11/2026
  * (#)build.gradle  0.1.0   05/29/2026
  *
  * @author   Jonathan Parker
- * @version  0.2.0
+ * @version  0.3.0
  * @since    0.1.0
  *
  * MIT License
@@ -50,7 +51,7 @@ apply plugin: 'net.jmp.gradle.plugin.projectinfo-info'
 
 ext {
 	project.group = 'net.jmp.demo.glassfish.war'
-	project.version = "${appVersion}-SNAPSHOT"
+	project.version = "${appVersion}"
 	project.description = 'to demonstrate a basic WAR application running Glassfish 8'
 }
 
